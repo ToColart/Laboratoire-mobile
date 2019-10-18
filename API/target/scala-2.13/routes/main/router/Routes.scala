@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/Pierre/Documents/Unamur/Master 1/Laboratoire en informatique ambiante et mobile/Laboratoire-mobile/API/conf/routes
-// @DATE:Fri Oct 18 11:06:12 CEST 2019
+// @DATE:Fri Oct 18 12:04:21 CEST 2019
 
 package router
 
@@ -17,7 +17,7 @@ class Routes(
   HomeController_2: controllers.HomeController,
   // @LINE:13
   DestinationController_1: controllers.DestinationController,
-  // @LINE:16
+  // @LINE:17
   Assets_0: controllers.Assets,
   val prefix: String
 ) extends GeneratedRouter {
@@ -28,7 +28,7 @@ class Routes(
     HomeController_2: controllers.HomeController,
     // @LINE:13
     DestinationController_1: controllers.DestinationController,
-    // @LINE:16
+    // @LINE:17
     Assets_0: controllers.Assets
   ) = this(errorHandler, HomeController_2, DestinationController_1, Assets_0, "/")
 
@@ -50,6 +50,7 @@ class Routes(
     ("""POST""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """places""", """controllers.HomeController.savePlace"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """testdb""", """controllers.HomeController.testDb"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """destination/getDestinations""", """controllers.DestinationController.getDestinations"""),
+    ("""POST""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """destination/save""", """controllers.DestinationController.saveDestination"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """assets/""" + "$" + """file<.+>""", """controllers.Assets.versioned(path:String = "/public", file:Asset)"""),
     Nil
   ).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
@@ -184,11 +185,29 @@ class Routes(
     )
   )
 
-  // @LINE:16
-  private[this] lazy val controllers_Assets_versioned7_route = Route("GET",
+  // @LINE:14
+  private[this] lazy val controllers_DestinationController_saveDestination7_route = Route("POST",
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("destination/save")))
+  )
+  private[this] lazy val controllers_DestinationController_saveDestination7_invoker = createInvoker(
+    DestinationController_1.saveDestination,
+    play.api.routing.HandlerDef(this.getClass.getClassLoader,
+      "router",
+      "controllers.DestinationController",
+      "saveDestination",
+      Nil,
+      "POST",
+      this.prefix + """destination/save""",
+      """""",
+      Seq()
+    )
+  )
+
+  // @LINE:17
+  private[this] lazy val controllers_Assets_versioned8_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("assets/"), DynamicPart("file", """.+""",false)))
   )
-  private[this] lazy val controllers_Assets_versioned7_invoker = createInvoker(
+  private[this] lazy val controllers_Assets_versioned8_invoker = createInvoker(
     Assets_0.versioned(fakeValue[String], fakeValue[Asset]),
     play.api.routing.HandlerDef(this.getClass.getClassLoader,
       "router",
@@ -247,10 +266,16 @@ class Routes(
         controllers_DestinationController_getDestinations6_invoker.call(DestinationController_1.getDestinations)
       }
   
-    // @LINE:16
-    case controllers_Assets_versioned7_route(params@_) =>
+    // @LINE:14
+    case controllers_DestinationController_saveDestination7_route(params@_) =>
+      call { 
+        controllers_DestinationController_saveDestination7_invoker.call(DestinationController_1.saveDestination)
+      }
+  
+    // @LINE:17
+    case controllers_Assets_versioned8_route(params@_) =>
       call(Param[String]("path", Right("/public")), params.fromPath[Asset]("file", None)) { (path, file) =>
-        controllers_Assets_versioned7_invoker.call(Assets_0.versioned(path, file))
+        controllers_Assets_versioned8_invoker.call(Assets_0.versioned(path, file))
       }
   }
 }

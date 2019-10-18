@@ -1,5 +1,7 @@
 package controllers
 
+import java.sql.PreparedStatement
+
 import javax.inject._
 import model._
 import play.api._
@@ -16,7 +18,6 @@ import play.api.libs.json.Reads._
 @Singleton
 class DestinationController @Inject()(db:Database, cc: ControllerComponents) extends AbstractController(cc) {
 
-  /**new stuff**/
   /**GET**/
 
   implicit val destinationWrites: Writes[Destination] =
@@ -46,21 +47,41 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
   }
 
   /**POST**/
-  implicit val locationReads: Reads[Location] =
-    (JsPath \ "lat").read[Double].and((JsPath \ "long").read[Double])(Location.apply _)
+  implicit val locationReads: Reads[Destination] =
+    (JsPath \ "id").read[Int]
+      .and((JsPath \ "name").read[String])
+      .and((JsPath \ "description").read[String])
+      .and((JsPath \ "audio").read[String])
+      .and((JsPath \ "coordX").read[Double])
+      .and((JsPath \ "coordY").read[Double])(Destination.apply _)
 
-  implicit val placeReads: Reads[Place] =
-    (JsPath \ "name").read[String].and((JsPath \ "location").read[Location])(Place.apply _)
-
-  def savePlace = Action(parse.json) { request =>
-    val placeResult = request.body.validate[Place]
-    placeResult.fold(
+  def saveDestination = Action(parse.json) { request =>
+    val destinationResult = request.body.validate[Destination]
+    destinationResult.fold(
       errors => {
         BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
       },
-      place => {
-        Place.save(place)
-        Ok(Json.obj("status" -> "OK", "message" -> ("Place '" + place.name + "' saved.")))
+      destination => {
+        val conn      = db.getConnection()
+
+        try {
+          val insertStatement =
+            """
+              | insert into destination (id, name, description, audio, coordx, coordy)
+              | values (?,?,?,?,?,?)
+              """.stripMargin
+          val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+          preparedStatement.setInt(1, destination.id)
+          preparedStatement.setString(2, destination.name)
+          preparedStatement.setString(3, destination.description)
+          preparedStatement.setString(4, destination.audio)
+          preparedStatement.setDouble(5, destination.coordX)
+          preparedStatement.setDouble(6, destination.coordY)
+          preparedStatement.execute()
+        } finally {
+          conn.close()
+        }
+        Created(Json.obj("status" -> "OK", "message" -> ("Place '" + destination.name + "' saved.")))
       }
     )
   }
