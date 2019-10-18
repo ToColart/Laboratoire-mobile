@@ -13,6 +13,7 @@ GET     /testdb                             controllers.HomeController.testDb
 GET     /destination/getDestinations        controllers.DestinationController.getDestinations
 POST    /destination/save                   controllers.DestinationController.saveDestination
 GET     /user/getUsers                      controllers.UserController.getUsers
+GET     /user/getUser/:id                   controllers.UserController.getUser(id: Int)
 POST    /user/save                          controllers.UserController.saveUser
 
 # Map static resources from the /public folder to the /assets URL path

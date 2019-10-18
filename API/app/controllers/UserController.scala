@@ -29,7 +29,6 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       .and((JsPath \ "email").write[String])
       .and((JsPath \ "password").write[String])(unlift(User.unapply))
 
-
   def getUsers = Action {
     var users = List[User]()
     val conn      = db.getConnection()
@@ -39,12 +38,33 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       val rs   = stmt.executeQuery("SELECT * FROM user")
 
       while (rs.next()) {
-        users = User(rs.getInt("id"), rs.getString("name"),rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))::users
+        users = User(rs.getInt("id"), rs.getString("name"), rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))::users
       }
     } finally {
       conn.close()
     }
     Ok(Json.toJson(users))
+  }
+
+  /**GET/id**/
+
+  def getUser(id: Int) = Action {
+
+    val conn = db.getConnection()
+
+    val stmt = conn.createStatement
+    val rs = stmt.executeQuery("SELECT * FROM user WHERE id = " + id)
+
+    if (rs.next()) {
+      val user = User(rs.getInt("id"), rs.getString("name"), rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))
+      conn.close()
+      Ok(Json.toJson(user))
+    }
+    else {
+      val list = List[User]()
+      conn.close()
+      Ok(Json.toJson(list))
+    }
   }
 
   /**POST**/

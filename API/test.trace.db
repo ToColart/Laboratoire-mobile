@@ -9606,3 +9606,7 @@ Caused by: java.lang.IllegalArgumentException: 2008
 	at org.h2.util.DateTimeUtils.parseDateValue(DateTimeUtils.java:305)
 	at org.h2.value.ValueDate.parse(ValueDate.java:79)
 	... 46 more
+2019-10-18 23:17:42 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: No data is available [2000-192]
+2019-10-18 23:18:43 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: No data is available [2000-192]
