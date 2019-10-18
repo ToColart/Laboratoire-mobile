@@ -1,5 +1,0 @@
-[debug] Copy resource mappings: 
-[debug] 	(C:\Users\Pierre\Downloads\play-samples-2.7.x\play-samples-2.7.x\play-scala-hello-world-tutorial\conf\application.conf,C:\Users\Pierre\Downloads\play-samples-2.7.x\play-samples-2.7.x\play-scala-hello-world-tutorial\target\scala-2.13\classes\application.conf)
-[debug] 	(C:\Users\Pierre\Downloads\play-samples-2.7.x\play-samples-2.7.x\play-scala-hello-world-tutorial\conf\logback.xml,C:\Users\Pierre\Downloads\play-samples-2.7.x\play-samples-2.7.x\play-scala-hello-world-tutorial\target\scala-2.13\classes\logback.xml)
-[debug] 	(C:\Users\Pierre\Downloads\play-samples-2.7.x\play-samples-2.7.x\play-scala-hello-world-tutorial\conf\messages,C:\Users\Pierre\Downloads\play-samples-2.7.x\play-samples-2.7.x\play-scala-hello-world-tutorial\target\scala-2.13\classes\messages)
-[debug] 	(C:\Users\Pierre\Downloads\play-samples-2.7.x\play-samples-2.7.x\play-scala-hello-world-tutorial\conf\routes,C:\Users\Pierre\Downloads\play-samples-2.7.x\play-samples-2.7.x\play-scala-hello-world-tutorial\target\scala-2.13\classes\routes)
