@@ -6,5 +6,4 @@ case class Weather_information(timeS: DateTime, temperature:Double, humidity:Dou
 {
   /*------METHODS------*/
 
-  override def toString = timeS + " -->\n\t " + temperature +" °c\n\t humidité : " +humidity
 }

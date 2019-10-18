@@ -12,6 +12,8 @@ POST    /places                             controllers.HomeController.savePlace
 GET     /testdb                             controllers.HomeController.testDb
 GET     /destination/getDestinations        controllers.DestinationController.getDestinations
 POST    /destination/save                   controllers.DestinationController.saveDestination
+GET     /user/getUsers                      controllers.UserController.getUsers
+POST    /user/save                          controllers.UserController.saveUser
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

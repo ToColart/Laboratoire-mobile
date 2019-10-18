@@ -11,7 +11,6 @@ case class User(id:Int, name:String, firstname:String, birthdate:Date, email:Str
   require(birthdate != null)
   require(email != null)
   require(password != null)
-  require(password.length > 6)
 
   /*------METHODS------*/
 
