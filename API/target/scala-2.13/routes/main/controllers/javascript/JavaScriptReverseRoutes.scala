@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:C:/Users/Pierre/Documents/Unamur/Master 1/Laboratoire en informatique ambiante et mobile/Laboratoire-mobile/API/conf/routes
-// @DATE:Fri Oct 18 10:29:32 CEST 2019
+// @DATE:Fri Oct 18 11:06:12 CEST 2019
 
 import play.api.routing.JavaScriptReverseRoute
 
@@ -9,6 +9,26 @@ import _root_.controllers.Assets.Asset
 
 // @LINE:7
 package controllers.javascript {
+
+  // @LINE:13
+  class ReverseDestinationController(_prefix: => String) {
+
+    def _defaultPrefix: String = {
+      if (_prefix.endsWith("/")) "" else "/"
+    }
+
+  
+    // @LINE:13
+    def getDestinations: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.DestinationController.getDestinations",
+      """
+        function() {
+          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "destination/getDestinations"})
+        }
+      """
+    )
+  
+  }
 
   // @LINE:7
   class ReverseHomeController(_prefix: => String) {
@@ -80,7 +100,7 @@ package controllers.javascript {
   
   }
 
-  // @LINE:15
+  // @LINE:16
   class ReverseAssets(_prefix: => String) {
 
     def _defaultPrefix: String = {
@@ -88,7 +108,7 @@ package controllers.javascript {
     }
 
   
-    // @LINE:15
+    // @LINE:16
     def versioned: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.Assets.versioned",
       """
