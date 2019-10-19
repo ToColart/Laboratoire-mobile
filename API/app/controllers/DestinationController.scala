@@ -46,6 +46,31 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
     Ok(Json.toJson(destinations))
   }
 
+  /**GET/id**/
+
+  def getDestination(id: Int) = Action {
+
+    val conn = db.getConnection()
+
+    try {
+      val insertStatement =  "SELECT * FROM destination WHERE id = ?".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      preparedStatement.setInt(1, id)
+      val rs = preparedStatement.executeQuery()
+
+      if (rs.next()) {
+        val dest = Destination(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"))
+        Ok(Json.toJson(dest))
+      }
+      else {
+        NotFound("NOT_FOUND")
+      }
+    }
+    finally {
+      conn.close()
+    }
+  }
+
   /**POST**/
   implicit val locationReads: Reads[Destination] =
     (JsPath \ "id").read[Int]
