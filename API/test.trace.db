@@ -9669,3 +9669,27 @@ DELETE FROM user WHERE id = ? [90002-192]
 	at akka.dispatch.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339)
 	at akka.dispatch.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979)
 	at akka.dispatch.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107)
+2019-10-19 23:59:49 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "WEATHER_INFORMATION" not found; SQL statement:
+SELECT * FROM weather_information [42102-192]
+2019-10-20 00:05:24 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "WEATHER_INFORMATION" not found; SQL statement:
+SELECT * FROM Weather_information [42102-192]
+2019-10-20 00:09:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "[*]
+              | INSERT INTO USER (ID, NAME, FIRSTNAME, BIRTHDATE, EMAIL, PASSWORD)
+              | VALUES (?,?,?,'Thu Jan 10 00:00:00 CET 2019',?,?)
+               "; SQL statement:
+
+              | insert into user (id, name, firstname, birthdate, email, password)
+              | values (?,?,?,'Thu Jan 10 00:00:00 CET 2019',?,?)
+               [42000-192]
+2019-10-20 00:12:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "[*]
+              | INSERT INTO USER (ID, NAME, FIRSTNAME, BIRTHDATE, EMAIL, PASSWORD)
+              | VALUES (?,?,?,'Thu Aug 22 00:00:00 CEST 2019',?,?)
+               "; SQL statement:
+
+              | insert into user (id, name, firstname, birthdate, email, password)
+              | values (?,?,?,'Thu Aug 22 00:00:00 CEST 2019',?,?)
+               [42000-192]

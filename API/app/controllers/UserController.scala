@@ -29,9 +29,19 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       .and((JsPath \ "email").write[String])
       .and((JsPath \ "password").write[String])(unlift(User.unapply))
 
+  /**POST**/
+
+  implicit val userReads: Reads[User] =
+    (JsPath \ "id").read[Int]
+      .and((JsPath \ "name").read[String])
+      .and((JsPath \ "firstname").read[String])
+      .and((JsPath \ "birthdate").read[Date])
+      .and((JsPath \ "email").read[String])
+      .and((JsPath \ "password").read[String])(User.apply _)
+
   def getUsers = Action {
     var users = List[User]()
-    val conn      = db.getConnection()
+    val conn  = db.getConnection()
 
     try {
       val stmt = conn.createStatement
@@ -80,7 +90,6 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
     val conn = db.getConnection()
 
     try {
-
       val select = "SELECT count(*) FROM User WHERE id = ?".stripMargin
       val prepSelect: PreparedStatement = conn.prepareStatement(select)
       prepSelect.setInt(1, id)
@@ -105,15 +114,6 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
     }
   }
 
-  /**POST**/
-  implicit val userReads: Reads[User] =
-    (JsPath \ "id").read[Int]
-      .and((JsPath \ "name").read[String])
-      .and((JsPath \ "firstname").read[String])
-      .and((JsPath \ "birthdate").read[Date])
-      .and((JsPath \ "email").read[String])
-      .and((JsPath \ "password").read[String])(User.apply _)
-
   def saveUser = Action(parse.json) { request =>
     val userResult = request.body.validate[User]
     userResult.fold(
@@ -121,21 +121,24 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
         BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
       },
       user => {
-        val conn      = db.getConnection()
+        val conn = db.getConnection()
 
         try {
           val insertStatement =
             """
               | insert into user (id, name, firstname, birthdate, email, password)
-              | values (?,?,?,'2019-10-01',?,?)
+              | values (?,?,?,?,?,?)
               """.stripMargin
+
+          val sqlDate = new Date(user.birthdate.getTime)
+
           val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
           preparedStatement.setInt(1, user.id)
           preparedStatement.setString(2, user.name)
           preparedStatement.setString(3, user.firstname)
-          //preparedStatement.setDate(4, user.birthdate)
-          preparedStatement.setString(4, user.email)
-          preparedStatement.setString(5, user.password)
+          preparedStatement.setObject(4, sqlDate)
+          preparedStatement.setString(5, user.email)
+          preparedStatement.setString(6, user.password)
           preparedStatement.execute()
         } finally {
           conn.close()

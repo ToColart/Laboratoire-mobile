@@ -28,6 +28,14 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       .and((JsPath \ "coordX").write[Double])
       .and((JsPath \ "coordY").write[Double])(unlift(Destination.unapply))
 
+  /**POST**/
+  implicit val locationReads: Reads[Destination] =
+    (JsPath \ "id").read[Int]
+      .and((JsPath \ "name").read[String])
+      .and((JsPath \ "description").read[String])
+      .and((JsPath \ "audio").read[String])
+      .and((JsPath \ "coordX").read[Double])
+      .and((JsPath \ "coordY").read[Double])(Destination.apply _)
 
   def getDestinations = Action {
     var destinations = List[Destination]()
@@ -70,15 +78,6 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       conn.close()
     }
   }
-
-  /**POST**/
-  implicit val locationReads: Reads[Destination] =
-    (JsPath \ "id").read[Int]
-      .and((JsPath \ "name").read[String])
-      .and((JsPath \ "description").read[String])
-      .and((JsPath \ "audio").read[String])
-      .and((JsPath \ "coordX").read[Double])
-      .and((JsPath \ "coordY").read[Double])(Destination.apply _)
 
   def saveDestination = Action(parse.json) { request =>
     val destinationResult = request.body.validate[Destination]

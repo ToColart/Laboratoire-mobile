@@ -16,6 +16,8 @@ POST    /destination/save                   controllers.DestinationController.sa
 GET     /user/getUsers                      controllers.UserController.getUsers
 GET     /user/getUser/:id                   controllers.UserController.getUser(id: Int)
 GET     /user/deleteUser/:id                controllers.UserController.deleteUser(id: Int)
+GET     /weather/getWeathers                controllers.WeatherController.getWeathers
+GET     /weather/getWeatherNow              controllers.WeatherController.getWeatherNow
 POST    /user/save                          controllers.UserController.saveUser
 
 # Map static resources from the /public folder to the /assets URL path
