@@ -1,6 +1,6 @@
 package controllers
 
-import java.sql.PreparedStatement
+import java.sql.{PreparedStatement, ResultSetMetaData}
 import java.util.Date
 
 import javax.inject._
@@ -52,18 +52,56 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
 
     val conn = db.getConnection()
 
-    val stmt = conn.createStatement
-    val rs = stmt.executeQuery("SELECT * FROM user WHERE id = " + id)
+    try {
+      val insertStatement =  "SELECT * FROM user WHERE id = ?".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      preparedStatement.setInt(1, id)
+      val rs = preparedStatement.executeQuery()
 
-    if (rs.next()) {
-      val user = User(rs.getInt("id"), rs.getString("name"), rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))
-      conn.close()
-      Ok(Json.toJson(user))
+      if (rs.next()) {
+        val user = User(rs.getInt("id"), rs.getString("name"), rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))
+        Ok(Json.toJson(user))
+      }
+      else {
+        NotFound("NOT_FOUND")
+      }
     }
-    else {
-      val list = List[User]()
+    finally {
       conn.close()
-      Ok(Json.toJson(list))
+    }
+  }
+
+  /**DELETE/ID**/
+
+    // Il ne trouve pas la route quand on met un delete ???
+
+  def deleteUser(id: Int) = Action {
+
+    val conn = db.getConnection()
+
+    try {
+
+      val select = "SELECT count(*) FROM User WHERE id = ?".stripMargin
+      val prepSelect: PreparedStatement = conn.prepareStatement(select)
+      prepSelect.setInt(1, id)
+      val rs = prepSelect.executeQuery()
+
+      var count = -1
+      if (rs.next) count = rs.getInt(1)
+
+      if(count>0){
+        val insertStatement =  "DELETE FROM user WHERE id = ?".stripMargin
+        val preparedStatement = conn.prepareStatement(insertStatement)
+        preparedStatement.setInt(1, id)
+        preparedStatement.execute()
+        Ok(Json.obj("status" -> "OK", "message" -> ("User '" + id + "' deleted.")))
+      }
+      else {
+        NotFound("NOT_FOUND")
+      }
+    }
+    finally {
+      conn.close()
     }
   }
 
@@ -102,7 +140,7 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
         } finally {
           conn.close()
         }
-        Created(Json.obj("status" -> "OK", "message" -> ("Place '" + user.name + "' saved.")))
+        Ok(Json.obj("status" -> "OK", "message" -> (user.toString)))
       }
     )
   }
