@@ -7,6 +7,7 @@ import javax.inject._
 import model._
 import play.api._
 import play.api.db._
+import play.api.http.Status.BAD_REQUEST
 import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
@@ -124,29 +125,41 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
         val conn = db.getConnection()
 
         try {
-          val insertStatement =
-            """
-              | insert into user (id, name, firstname, birthdate, email, password)
-              | values (?,?,?,?,?,?)
+          val select = "SELECT count(*) FROM User WHERE email = ?".stripMargin
+          val prepSelect: PreparedStatement = conn.prepareStatement(select)
+          prepSelect.setString(1, user.email)
+          val rs = prepSelect.executeQuery()
+
+          var count = -1
+          if (rs.next) count = rs.getInt(1)
+
+          if (count == 0) {
+            val insertStatement =
+              """
+                | insert into user (id, name, firstname, birthdate, email, password)
+                | values (?,?,?,?,?,?)
               """.stripMargin
 
-          val sqlDate = new Date(user.birthdate.getTime)
+            val sqlDate = new Date(user.birthdate.getTime)
+            val preparedStatement: PreparedStatement = conn.prepareStatement(insertStatement)
+            preparedStatement.setInt(1, user.id)
+            preparedStatement.setString(2, user.name)
+            preparedStatement.setString(3, user.firstname)
+            preparedStatement.setObject(4, sqlDate)
+            preparedStatement.setString(5, user.email)
+            preparedStatement.setString(6, user.password)
+            preparedStatement.execute()
 
-          val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
-          preparedStatement.setInt(1, user.id)
-          preparedStatement.setString(2, user.name)
-          preparedStatement.setString(3, user.firstname)
-          preparedStatement.setObject(4, sqlDate)
-          preparedStatement.setString(5, user.email)
-          preparedStatement.setString(6, user.password)
-          preparedStatement.execute()
-        } finally {
-          conn.close()
+            Ok(Json.obj("status" -> "OK", "message" -> (user.toString)))
+          }
+          else {
+            BadRequest(Json.obj("status" -> "KO", "error" -> "Email pas unique"))
+          }
         }
-        Ok(Json.obj("status" -> "OK", "message" -> (user.toString)))
+        finally {
+            conn.close()
+          }
       }
     )
   }
-
-
 }
