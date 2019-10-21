@@ -29,6 +29,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       .and((JsPath \ "coordY").write[Double])(unlift(Destination.unapply))
 
   /**POST**/
+
   implicit val locationReads: Reads[Destination] =
     (JsPath \ "id").read[Int]
       .and((JsPath \ "name").read[String])
@@ -39,7 +40,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
 
   def getDestinations = Action {
     var destinations = List[Destination]()
-    val conn      = db.getConnection()
+    val conn = db.getConnection()
 
     try {
       val stmt = conn.createStatement
@@ -86,7 +87,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
         BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
       },
       destination => {
-        val conn      = db.getConnection()
+        val conn = db.getConnection()
 
         try {
           val insertStatement =
@@ -109,6 +110,4 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       }
     )
   }
-
-
 }
