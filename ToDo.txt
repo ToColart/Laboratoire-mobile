@@ -1,17 +1,10 @@
 UserController
 ----------------
 
-	- Vérification de la date dans la méthode Post (S'enregistre en seconde et non pas en date...)
 	- Encryptage du mdp dans la BD
 	- La méthode DeleteUser marche mais seulement si le type de cette méthode dans le fichier routes est GET
 
-DestinationController
-----------------------
+DestinationController / TravelController / ...
+-----------------------------------------------
 
 	- Quelques détails de clean code sans doute/Optimisation de code
-
-TravelController
------------------
-
-	- Je suis un peu dans le flou pour ce controlleur, dans quel cadre doit-on lui faire une requête ?
-	  

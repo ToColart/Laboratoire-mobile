@@ -2,12 +2,10 @@ package controllers
 
 import java.sql.{PreparedStatement, ResultSetMetaData}
 import java.util.Date
-
 import javax.inject._
 import model._
-import play.api._
+import helper._
 import play.api.db._
-import play.api.http.Status.BAD_REQUEST
 import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
@@ -20,7 +18,7 @@ import play.api.libs.json.Reads._
 @Singleton
 class UserController @Inject()(db:Database, cc: ControllerComponents) extends AbstractController(cc) {
 
-  /**GET**/
+  /**POST**/
 
   implicit val userWrites: Writes[User] =
     (JsPath \ "id").write[Int]
@@ -30,7 +28,7 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       .and((JsPath \ "email").write[String])
       .and((JsPath \ "password").write[String])(unlift(User.unapply))
 
-  /**POST**/
+  /**GET**/
 
   implicit val userReads: Reads[User] =
     (JsPath \ "id").read[Int]
@@ -39,6 +37,10 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       .and((JsPath \ "birthdate").read[Date])
       .and((JsPath \ "email").read[String])
       .and((JsPath \ "password").read[String])(User.apply _)
+
+  implicit val connectingUserReads: Reads[ConnectingUser] =
+    (JsPath \ "email").read[String]
+      .and((JsPath \ "password").read[String])(ConnectingUser.apply _)
 
   def getUsers = Action {
     var users = List[User]()
@@ -59,27 +61,41 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
 
   /**GET/id**/
 
-  def getUser(id: Int) = Action {
+  def getUser = Action(parse.json) { request =>
+    val userResult = request.body.validate[ConnectingUser]
+    System.out.println(userResult)
+    userResult.fold(
+      errors => {
+        BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
+      },
+      user => {
 
-    val conn = db.getConnection()
+        val conn = db.getConnection()
 
-    try {
-      val insertStatement =  "SELECT * FROM user WHERE id = ?".stripMargin
-      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
-      preparedStatement.setInt(1, id)
-      val rs = preparedStatement.executeQuery()
+        try {
+          val insertStatement = "SELECT * FROM user WHERE email = ? AND password = ?".stripMargin
+          val preparedStatement: PreparedStatement = conn.prepareStatement(insertStatement)
+          preparedStatement.setString(1, user.email)
 
-      if (rs.next()) {
-        val user = User(rs.getInt("id"), rs.getString("name"), rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))
-        Ok(Json.toJson(user))
+          val password = HashingPassword.getHash(user.password)
+          System.out.println(password)
+          preparedStatement.setString(2, password)
+
+          val rs = preparedStatement.executeQuery()
+
+          if (rs.next()) {
+            val user = User(rs.getInt("id"), rs.getString("name"), rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))
+            Ok(Json.toJson(user))
+          }
+          else {
+            NotFound("NOT_FOUND")
+          }
+        }
+        finally {
+          conn.close()
+        }
       }
-      else {
-        NotFound("NOT_FOUND")
-      }
-    }
-    finally {
-      conn.close()
-    }
+    )
   }
 
   /**DELETE/ID**/
@@ -147,7 +163,10 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
             preparedStatement.setString(3, user.firstname)
             preparedStatement.setObject(4, sqlDate)
             preparedStatement.setString(5, user.email)
-            preparedStatement.setString(6, user.password)
+
+            val password = HashingPassword.getHash(user.password)
+
+            preparedStatement.setString(6, password)
             preparedStatement.execute()
 
             Ok(Json.obj("status" -> "OK", "message" -> (user.toString)))

@@ -22,13 +22,13 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
   /**GET**/
 
   implicit val weatherRead: Reads[Weather_information] =
-    (JsPath \ "timeS").read[Date]
+    (JsPath \ "timeW").read[Date]
       .and((JsPath \ "temperature").read[Double])
       .and((JsPath \ "humidity").read[Double])
       .and((JsPath \ "id_destination").read[Int])(Weather_information.apply _)
 
   implicit val weatherWrite: Writes[Weather_information] =
-    (JsPath \ "timeS").write[Date]
+    (JsPath \ "timeW").write[Date]
       .and((JsPath \ "temperature").write[Double])
       .and((JsPath \ "humidity").write[Double])
       .and((JsPath \ "id_destination").write[Int])(unlift(Weather_information.unapply))
@@ -43,7 +43,7 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
       val rs   = stmt.executeQuery("SELECT * FROM Weather_information")
 
       while (rs.next()) {
-        weathers = Weather_information(rs.getDate("timeS"), rs.getDouble("temperature"), rs.getDouble("humidity"), rs.getInt("id_destination"))::weathers
+        weathers = Weather_information(rs.getDate("timeW"), rs.getDouble("temperature"), rs.getDouble("humidity"), rs.getInt("id_destination"))::weathers
       }
     } finally {
       conn.close()
@@ -58,12 +58,12 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
     val conn = db.getConnection()
 
     try {
-      val insertStatement =  "SELECT * FROM weather WHERE timeS = CURRENT_TIMESTAMP()".stripMargin
+      val insertStatement =  "SELECT * FROM weather WHERE timeW = CURRENT_TIMESTAMP()".stripMargin
       val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
       val rs = preparedStatement.executeQuery()
 
       if (rs.next()) {
-        val wea = Weather_information(rs.getDate("timeS"), rs.getDouble("temperature"), rs.getDouble("humidity"), rs.getInt("id_destination"))
+        val wea = Weather_information(rs.getDate("timeW"), rs.getDouble("temperature"), rs.getDouble("humidity"), rs.getInt("id_destination"))
         Ok(Json.toJson(wea))
       }
       else {
@@ -87,7 +87,7 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
         try {
           val insertStatement =
             """
-              | insert into weather_information (timeS, temperature, humidity, id_destination)
+              | insert into weather_information (timeW, temperature, humidity, id_destination)
               | values (CURRENT_TIMESTAMP(),?,?,?)
               """.stripMargin
           val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
