@@ -28,10 +28,19 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       .and((JsPath \ "coordX").write[Double])
       .and((JsPath \ "coordY").write[Double])(unlift(Destination.unapply))
 
+  /**POST**/
+
+  implicit val locationReads: Reads[Destination] =
+    (JsPath \ "id").read[Int]
+      .and((JsPath \ "name").read[String])
+      .and((JsPath \ "description").read[String])
+      .and((JsPath \ "audio").read[String])
+      .and((JsPath \ "coordX").read[Double])
+      .and((JsPath \ "coordY").read[Double])(Destination.apply _)
 
   def getDestinations = Action {
     var destinations = List[Destination]()
-    val conn      = db.getConnection()
+    val conn = db.getConnection()
 
     try {
       val stmt = conn.createStatement
@@ -46,14 +55,30 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
     Ok(Json.toJson(destinations))
   }
 
-  /**POST**/
-  implicit val locationReads: Reads[Destination] =
-    (JsPath \ "id").read[Int]
-      .and((JsPath \ "name").read[String])
-      .and((JsPath \ "description").read[String])
-      .and((JsPath \ "audio").read[String])
-      .and((JsPath \ "coordX").read[Double])
-      .and((JsPath \ "coordY").read[Double])(Destination.apply _)
+  /**GET/id**/
+
+  def getDestination(id: Int) = Action {
+
+    val conn = db.getConnection()
+
+    try {
+      val insertStatement =  "SELECT * FROM destination WHERE id = ?".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      preparedStatement.setInt(1, id)
+      val rs = preparedStatement.executeQuery()
+
+      if (rs.next()) {
+        val dest = Destination(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"))
+        Ok(Json.toJson(dest))
+      }
+      else {
+        NotFound("NOT_FOUND")
+      }
+    }
+    finally {
+      conn.close()
+    }
+  }
 
   def saveDestination = Action(parse.json) { request =>
     val destinationResult = request.body.validate[Destination]
@@ -62,7 +87,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
         BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
       },
       destination => {
-        val conn      = db.getConnection()
+        val conn = db.getConnection()
 
         try {
           val insertStatement =
@@ -81,10 +106,8 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
         } finally {
           conn.close()
         }
-        Created(Json.obj("status" -> "OK", "message" -> ("Place '" + destination.name + "' saved.")))
+        Created(Json.obj("status" -> "OK", "message" -> ("Destination '" + destination.name + "' saved.")))
       }
     )
   }
-
-
 }

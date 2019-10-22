@@ -9606,3 +9606,90 @@ Caused by: java.lang.IllegalArgumentException: 2008
 	at org.h2.util.DateTimeUtils.parseDateValue(DateTimeUtils.java:305)
 	at org.h2.value.ValueDate.parse(ValueDate.java:79)
 	... 46 more
+2019-10-18 23:17:42 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: No data is available [2000-192]
+2019-10-18 23:18:43 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: No data is available [2000-192]
+2019-10-19 10:39:01 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "DELETE *[*] FROM USER WHERE ID = ? "; expected "identifier"; SQL statement:
+DELETE * FROM user WHERE id = ? [42001-192]
+2019-10-19 10:44:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement """DELETE * FROM user WHERE id = ?""[*]"; expected "DELETE, DROP, DECLARE, DEALLOCATE, {"; SQL statement:
+"DELETE * FROM user WHERE id = ?" [42001-192]
+2019-10-19 10:44:22 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement """DELETE * FROM user WHERE id = ?""[*]"; expected "DELETE, DROP, DECLARE, DEALLOCATE, {"; SQL statement:
+"DELETE * FROM user WHERE id = ?" [42001-192]
+2019-10-19 10:46:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Method is only allowed for a query. Use execute or executeUpdate instead of executeQuery; SQL statement:
+DELETE FROM user WHERE id = ? [90002-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.message.DbException.get(DbException.java:144)
+	at org.h2.command.Prepared.query(Prepared.java:212)
+	at org.h2.command.CommandContainer.query(CommandContainer.java:110)
+	at org.h2.command.Command.executeQuery(Command.java:201)
+	at org.h2.jdbc.JdbcPreparedStatement.executeQuery(JdbcPreparedStatement.java:110)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.jdbcdslog.PreparedStatementLoggingHandler.invoke(PreparedStatementLoggingHandler.java:35)
+	at com.sun.proxy.$Proxy27.executeQuery(Unknown Source)
+	at controllers.UserController.$anonfun$deleteUser$1(UserController.scala:86)
+	at play.api.mvc.ActionBuilder.$anonfun$apply$11(Action.scala:368)
+	at scala.Function1.$anonfun$andThen$1(Function1.scala:85)
+	at play.api.mvc.ActionBuilderImpl.invokeBlock(Action.scala:489)
+	at play.api.mvc.ActionBuilderImpl.invokeBlock(Action.scala:487)
+	at play.api.mvc.ActionBuilder$$anon$9.invokeBlock(Action.scala:336)
+	at play.api.mvc.ActionBuilder$$anon$9.invokeBlock(Action.scala:331)
+	at play.api.mvc.ActionBuilder$$anon$10.apply(Action.scala:426)
+	at play.api.mvc.Action.$anonfun$apply$2(Action.scala:98)
+	at play.api.libs.streams.StrictAccumulator.$anonfun$mapFuture$4(Accumulator.scala:184)
+	at scala.util.Try$.apply(Try.scala:212)
+	at play.api.libs.streams.StrictAccumulator.$anonfun$mapFuture$3(Accumulator.scala:184)
+	at scala.Function1.$anonfun$andThen$1(Function1.scala:85)
+	at scala.Function1.$anonfun$andThen$1(Function1.scala:85)
+	at scala.Function1.$anonfun$andThen$1(Function1.scala:85)
+	at play.api.libs.streams.StrictAccumulator.run(Accumulator.scala:219)
+	at play.core.server.AkkaHttpServer.$anonfun$runAction$4(AkkaHttpServer.scala:441)
+	at akka.http.scaladsl.util.FastFuture$.strictTransform$1(FastFuture.scala:41)
+	at akka.http.scaladsl.util.FastFuture$.$anonfun$transformWith$3(FastFuture.scala:51)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:447)
+	at akka.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:55)
+	at akka.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:92)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at akka.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:92)
+	at akka.dispatch.TaskInvocation.run(AbstractDispatcher.scala:41)
+	at akka.dispatch.ForkJoinExecutorConfigurator$AkkaForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:49)
+	at akka.dispatch.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260)
+	at akka.dispatch.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339)
+	at akka.dispatch.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979)
+	at akka.dispatch.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107)
+2019-10-19 23:59:49 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "WEATHER_INFORMATION" not found; SQL statement:
+SELECT * FROM weather_information [42102-192]
+2019-10-20 00:05:24 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "WEATHER_INFORMATION" not found; SQL statement:
+SELECT * FROM Weather_information [42102-192]
+2019-10-20 00:09:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "[*]
+              | INSERT INTO USER (ID, NAME, FIRSTNAME, BIRTHDATE, EMAIL, PASSWORD)
+              | VALUES (?,?,?,'Thu Jan 10 00:00:00 CET 2019',?,?)
+               "; SQL statement:
+
+              | insert into user (id, name, firstname, birthdate, email, password)
+              | values (?,?,?,'Thu Jan 10 00:00:00 CET 2019',?,?)
+               [42000-192]
+2019-10-20 00:12:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "[*]
+              | INSERT INTO USER (ID, NAME, FIRSTNAME, BIRTHDATE, EMAIL, PASSWORD)
+              | VALUES (?,?,?,'Thu Aug 22 00:00:00 CEST 2019',?,?)
+               "; SQL statement:
+
+              | insert into user (id, name, firstname, birthdate, email, password)
+              | values (?,?,?,'Thu Aug 22 00:00:00 CEST 2019',?,?)
+               [42000-192]

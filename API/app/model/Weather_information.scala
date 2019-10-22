@@ -1,8 +1,8 @@
 package model
 
-import akka.http.scaladsl.model.DateTime
+import java.util.Date
 
-case class Weather_information(timeS: DateTime, temperature:Double, humidity:Double, id_destination:Int)
+case class Weather_information(timeS: Date, temperature:Double, humidity:Double, id_destination:Int)
 {
   /*------METHODS------*/
 

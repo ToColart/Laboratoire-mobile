@@ -1,12 +1,13 @@
 package controllers
 
-import java.sql.PreparedStatement
+import java.sql.{PreparedStatement, ResultSetMetaData}
 import java.util.Date
 
 import javax.inject._
 import model._
 import play.api._
 import play.api.db._
+import play.api.http.Status.BAD_REQUEST
 import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
@@ -29,25 +30,8 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       .and((JsPath \ "email").write[String])
       .and((JsPath \ "password").write[String])(unlift(User.unapply))
 
-
-  def getUsers = Action {
-    var users = List[User]()
-    val conn      = db.getConnection()
-
-    try {
-      val stmt = conn.createStatement
-      val rs   = stmt.executeQuery("SELECT * FROM user")
-
-      while (rs.next()) {
-        users = User(rs.getInt("id"), rs.getString("name"),rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))::users
-      }
-    } finally {
-      conn.close()
-    }
-    Ok(Json.toJson(users))
-  }
-
   /**POST**/
+
   implicit val userReads: Reads[User] =
     (JsPath \ "id").read[Int]
       .and((JsPath \ "name").read[String])
@@ -56,6 +40,81 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       .and((JsPath \ "email").read[String])
       .and((JsPath \ "password").read[String])(User.apply _)
 
+  def getUsers = Action {
+    var users = List[User]()
+    val conn  = db.getConnection()
+
+    try {
+      val stmt = conn.createStatement
+      val rs   = stmt.executeQuery("SELECT * FROM user")
+
+      while (rs.next()) {
+        users = User(rs.getInt("id"), rs.getString("name"), rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))::users
+      }
+    } finally {
+      conn.close()
+    }
+    Ok(Json.toJson(users))
+  }
+
+  /**GET/id**/
+
+  def getUser(id: Int) = Action {
+
+    val conn = db.getConnection()
+
+    try {
+      val insertStatement =  "SELECT * FROM user WHERE id = ?".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      preparedStatement.setInt(1, id)
+      val rs = preparedStatement.executeQuery()
+
+      if (rs.next()) {
+        val user = User(rs.getInt("id"), rs.getString("name"), rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))
+        Ok(Json.toJson(user))
+      }
+      else {
+        NotFound("NOT_FOUND")
+      }
+    }
+    finally {
+      conn.close()
+    }
+  }
+
+  /**DELETE/ID**/
+
+    // Il ne trouve pas la route quand on met un delete ???
+
+  def deleteUser(id: Int) = Action {
+
+    val conn = db.getConnection()
+
+    try {
+      val select = "SELECT count(*) FROM User WHERE id = ?".stripMargin
+      val prepSelect: PreparedStatement = conn.prepareStatement(select)
+      prepSelect.setInt(1, id)
+      val rs = prepSelect.executeQuery()
+
+      var count = -1
+      if (rs.next) count = rs.getInt(1)
+
+      if(count>0){
+        val insertStatement =  "DELETE FROM user WHERE id = ?".stripMargin
+        val preparedStatement = conn.prepareStatement(insertStatement)
+        preparedStatement.setInt(1, id)
+        preparedStatement.execute()
+        Ok(Json.obj("status" -> "OK", "message" -> ("User '" + id + "' deleted.")))
+      }
+      else {
+        NotFound("NOT_FOUND")
+      }
+    }
+    finally {
+      conn.close()
+    }
+  }
+
   def saveUser = Action(parse.json) { request =>
     val userResult = request.body.validate[User]
     userResult.fold(
@@ -63,29 +122,44 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
         BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
       },
       user => {
-        val conn      = db.getConnection()
+        val conn = db.getConnection()
 
         try {
-          val insertStatement =
-            """
-              | insert into user (id, name, firstname, birthdate, email, password)
-              | values (?,?,?,'2019-10-01',?,?)
+          val select = "SELECT count(*) FROM User WHERE email = ?".stripMargin
+          val prepSelect: PreparedStatement = conn.prepareStatement(select)
+          prepSelect.setString(1, user.email)
+          val rs = prepSelect.executeQuery()
+
+          var count = -1
+          if (rs.next) count = rs.getInt(1)
+
+          if (count == 0) {
+            val insertStatement =
+              """
+                | insert into user (id, name, firstname, birthdate, email, password)
+                | values (?,?,?,?,?,?)
               """.stripMargin
-          val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
-          preparedStatement.setInt(1, user.id)
-          preparedStatement.setString(2, user.name)
-          preparedStatement.setString(3, user.firstname)
-          //preparedStatement.setDate(4, user.birthdate)
-          preparedStatement.setString(4, user.email)
-          preparedStatement.setString(5, user.password)
-          preparedStatement.execute()
-        } finally {
-          conn.close()
+
+            val sqlDate = new Date(user.birthdate.getTime)
+            val preparedStatement: PreparedStatement = conn.prepareStatement(insertStatement)
+            preparedStatement.setInt(1, user.id)
+            preparedStatement.setString(2, user.name)
+            preparedStatement.setString(3, user.firstname)
+            preparedStatement.setObject(4, sqlDate)
+            preparedStatement.setString(5, user.email)
+            preparedStatement.setString(6, user.password)
+            preparedStatement.execute()
+
+            Ok(Json.obj("status" -> "OK", "message" -> (user.toString)))
+          }
+          else {
+            BadRequest(Json.obj("status" -> "KO", "error" -> "Email pas unique"))
+          }
         }
-        Created(Json.obj("status" -> "OK", "message" -> ("Place '" + user.name + "' saved.")))
+        finally {
+            conn.close()
+          }
       }
     )
   }
-
-
 }
