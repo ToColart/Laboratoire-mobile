@@ -106,7 +106,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
         } finally {
           conn.close()
         }
-        Created(Json.obj("status" -> "OK", "message" -> ("Place '" + destination.name + "' saved.")))
+        Created(Json.obj("status" -> "OK", "message" -> ("Destination '" + destination.name + "' saved.")))
       }
     )
   }

@@ -14,5 +14,5 @@ case class User(id:Int, name:String, firstname:String, birthdate:Date, email:Str
 
   /*------METHODS------*/
 
-  override def toString = name + " " + firstname + " - " + birthdate
+  override def toString = name + " " + firstname + " - " + email
 }

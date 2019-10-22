@@ -39,7 +39,7 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
     val conn      = db.getConnection()
 
     try {
-      val stmt = conn.createStatement   //Table pas encore crée Pierre ?
+      val stmt = conn.createStatement   //Table pas encore créée Pierre ?
       val rs   = stmt.executeQuery("SELECT * FROM Weather_information")
 
       while (rs.next()) {
@@ -73,5 +73,33 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
     finally {
       conn.close()
     }
+  }
+
+  def saveWeather = Action(parse.json) { request =>
+    val WeatherResult = request.body.validate[Weather_information]
+    WeatherResult.fold(
+      errors => {
+        BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
+      },
+      weather_information => {
+        val conn = db.getConnection()
+
+        try {
+          val insertStatement =
+            """
+              | insert into weather_information (timeS, temperature, humidity, id_destination)
+              | values (CURRENT_TIMESTAMP(),?,?,?)
+              """.stripMargin
+          val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+          preparedStatement.setDouble(1, weather_information.temperature)
+          preparedStatement.setDouble(2, weather_information.humidity)
+          preparedStatement.setInt(3, weather_information.id_destination)
+          preparedStatement.execute()
+        } finally {
+          conn.close()
+        }
+        Created(Json.obj("status" -> "OK", "message" -> ("Weather saved.")))
+      }
+    )
   }
 }
