@@ -18,6 +18,8 @@ import play.api.libs.json.Reads._
 @Singleton
 class UserController @Inject()(db:Database, cc: ControllerComponents) extends AbstractController(cc) {
 
+  /**--- Variables implicites ---**/
+
   /**POST**/
 
   implicit val userWrites: Writes[User] =
@@ -27,6 +29,13 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       .and((JsPath \ "birthdate").write[Date])
       .and((JsPath \ "email").write[String])
       .and((JsPath \ "password").write[String])(unlift(User.unapply))
+
+  implicit val postUserWrites: Writes[PostUser] =
+      (JsPath \ "name").write[String]
+      .and((JsPath \ "firstname").write[String])
+      .and((JsPath \ "birthdate").write[Date])
+      .and((JsPath \ "email").write[String])
+      .and((JsPath \ "password").write[String])(unlift(PostUser.unapply))
 
   /**GET**/
 
@@ -38,9 +47,18 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       .and((JsPath \ "email").read[String])
       .and((JsPath \ "password").read[String])(User.apply _)
 
+  implicit val postUserReads: Reads[PostUser] =
+      (JsPath \ "name").read[String]
+      .and((JsPath \ "firstname").read[String])
+      .and((JsPath \ "birthdate").read[Date])
+      .and((JsPath \ "email").read[String])
+      .and((JsPath \ "password").read[String])(PostUser.apply _)
+
   implicit val connectingUserReads: Reads[ConnectingUser] =
     (JsPath \ "email").read[String]
       .and((JsPath \ "password").read[String])(ConnectingUser.apply _)
+
+  /**--- Méthodes ---**/
 
   def getUsers = Action {
     var users = List[User]()
@@ -100,8 +118,6 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
 
   /**DELETE/ID**/
 
-    // Il ne trouve pas la route quand on met un delete ???
-
   def deleteUser(id: Int) = Action {
 
     val conn = db.getConnection()
@@ -131,8 +147,10 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
     }
   }
 
+  /**POST**/
+
   def saveUser = Action(parse.json) { request =>
-    val userResult = request.body.validate[User]
+    val userResult = request.body.validate[PostUser]
     userResult.fold(
       errors => {
         BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
@@ -152,21 +170,20 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
           if (count == 0) {
             val insertStatement =
               """
-                | insert into user (id, name, firstname, birthdate, email, password)
-                | values (?,?,?,?,?,?)
+                | insert into user (name, firstname, birthdate, email, password)
+                | values (?,?,?,?,?)
               """.stripMargin
 
             val sqlDate = new Date(user.birthdate.getTime)
             val preparedStatement: PreparedStatement = conn.prepareStatement(insertStatement)
-            preparedStatement.setInt(1, user.id)
-            preparedStatement.setString(2, user.name)
-            preparedStatement.setString(3, user.firstname)
-            preparedStatement.setObject(4, sqlDate)
-            preparedStatement.setString(5, user.email)
+            preparedStatement.setString(1, user.name)
+            preparedStatement.setString(2, user.firstname)
+            preparedStatement.setObject(3, sqlDate)
+            preparedStatement.setString(4, user.email)
 
             val password = HashingPassword.getHash(user.password)
 
-            preparedStatement.setString(6, password)
+            preparedStatement.setString(5, password)
             preparedStatement.execute()
 
             Ok(Json.obj("status" -> "OK", "message" -> (user.toString)))

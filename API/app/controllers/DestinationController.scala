@@ -18,6 +18,8 @@ import play.api.libs.json.Reads._
 @Singleton
 class DestinationController @Inject()(db:Database, cc: ControllerComponents) extends AbstractController(cc) {
 
+  /**--- Variables implicites ---**/
+
   /**GET**/
 
   implicit val destinationWrites: Writes[Destination] =
@@ -28,15 +30,31 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       .and((JsPath \ "coordX").write[Double])
       .and((JsPath \ "coordY").write[Double])(unlift(Destination.unapply))
 
+  implicit val postDestinationWrites: Writes[PostDestination] =
+      (JsPath \ "name").write[String]
+      .and((JsPath \ "description").write[String])
+      .and((JsPath \ "audio").write[String])
+      .and((JsPath \ "coordX").write[Double])
+      .and((JsPath \ "coordY").write[Double])(unlift(PostDestination.unapply))
+
   /**POST**/
 
-  implicit val locationReads: Reads[Destination] =
+  implicit val destinationReads: Reads[Destination] =
     (JsPath \ "id").read[Int]
       .and((JsPath \ "name").read[String])
       .and((JsPath \ "description").read[String])
       .and((JsPath \ "audio").read[String])
       .and((JsPath \ "coordX").read[Double])
       .and((JsPath \ "coordY").read[Double])(Destination.apply _)
+
+  implicit val postDestinationReads: Reads[PostDestination] =
+      (JsPath \ "name").read[String]
+      .and((JsPath \ "description").read[String])
+      .and((JsPath \ "audio").read[String])
+      .and((JsPath \ "coordX").read[Double])
+      .and((JsPath \ "coordY").read[Double])(PostDestination.apply _)
+
+  /**--- Méthodes ---**/
 
   def getDestinations = Action {
     var destinations = List[Destination]()
@@ -81,7 +99,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
   }
 
   def saveDestination = Action(parse.json) { request =>
-    val destinationResult = request.body.validate[Destination]
+    val destinationResult = request.body.validate[PostDestination]
     destinationResult.fold(
       errors => {
         BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
@@ -92,16 +110,15 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
         try {
           val insertStatement =
             """
-              | insert into destination (id, name, description, audio, coordx, coordy)
-              | values (?,?,?,?,?,?)
+              | insert into destination (name, description, audio, coordx, coordy)
+              | values (?,?,?,?,?)
               """.stripMargin
           val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
-          preparedStatement.setInt(1, destination.id)
-          preparedStatement.setString(2, destination.name)
-          preparedStatement.setString(3, destination.description)
-          preparedStatement.setString(4, destination.audio)
-          preparedStatement.setDouble(5, destination.coordX)
-          preparedStatement.setDouble(6, destination.coordY)
+          preparedStatement.setString(1, destination.name)
+          preparedStatement.setString(2, destination.description)
+          preparedStatement.setString(3, destination.audio)
+          preparedStatement.setDouble(4, destination.coordX)
+          preparedStatement.setDouble(5, destination.coordY)
           preparedStatement.execute()
         } finally {
           conn.close()
