@@ -81,13 +81,11 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
 
   def getUser = Action(parse.json) { request =>
     val userResult = request.body.validate[ConnectingUser]
-    System.out.println(userResult)
     userResult.fold(
       errors => {
         BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
       },
       user => {
-
         val conn = db.getConnection()
 
         try {
@@ -96,7 +94,6 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
           preparedStatement.setString(1, user.email)
 
           val password = HashingPassword.getHash(user.password)
-          System.out.println(password)
           preparedStatement.setString(2, password)
 
           val rs = preparedStatement.executeQuery()
