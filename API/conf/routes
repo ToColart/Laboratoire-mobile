@@ -15,7 +15,7 @@ GET     /destination/getDestination/:id     controllers.DestinationController.ge
 POST    /destination/save                   controllers.DestinationController.saveDestination
 GET     /user/getUsers                      controllers.UserController.getUsers
 GET     /user/getUser                      controllers.UserController.getUser
-GET     /user/deleteUser/:id                controllers.UserController.deleteUser(id: Int)
+DELETE     /user/deleteUser/:id                controllers.UserController.deleteUser(id: Int)
 GET     /weather/getWeathers                controllers.WeatherController.getWeathers
 GET     /weather/getWeatherNow              controllers.WeatherController.getWeatherNow
 POST    /weather/saveWeather                controllers.WeatherController.saveWeather
