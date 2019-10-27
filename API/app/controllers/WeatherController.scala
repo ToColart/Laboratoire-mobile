@@ -34,13 +34,14 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
       .and((JsPath \ "id_destination").write[Int])(unlift(Weather_information.unapply))
 
 
-  def getWeathers = Action {
+  def getWeathers(id:Int) = Action {
     var weathers = List[Weather_information]()
     val conn      = db.getConnection()
 
     try {
-      val stmt = conn.createStatement   //Table pas encore créée Pierre ?
-      val rs   = stmt.executeQuery("SELECT * FROM Weather_information")
+      val stmt = conn.prepareStatement("SELECT * FROM Weather_information where id_destination = ?")
+      stmt.setInt(1, id)
+      val rs   = stmt.executeQuery()
 
       while (rs.next()) {
         weathers = Weather_information(rs.getDate("timeW"), rs.getDouble("temperature"), rs.getDouble("humidity"), rs.getInt("id_destination"))::weathers
@@ -53,13 +54,14 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
 
   /**GET/id**/
 
-  def getWeatherNow() = Action {
+  def getMostRecentWeather(id:Int) = Action {
 
     val conn = db.getConnection()
 
     try {
-      val insertStatement =  "SELECT * FROM weather WHERE timeW = CURRENT_TIMESTAMP()".stripMargin
+      val insertStatement =  "select top 1 * from weather_information where id_destination = ? order by timew desc".stripMargin
       val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      preparedStatement.setInt(1, id)
       val rs = preparedStatement.executeQuery()
 
       if (rs.next()) {
