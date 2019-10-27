@@ -183,7 +183,7 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
             preparedStatement.setString(5, password)
             preparedStatement.execute()
 
-            Ok(Json.obj("status" -> "OK", "message" -> (user.toString)))
+            Created(Json.obj("status" -> "OK", "message" -> (user.toString)))
           }
           else {
             BadRequest(Json.obj("status" -> "KO", "error" -> "Email pas unique"))
