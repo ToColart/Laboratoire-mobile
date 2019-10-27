@@ -1,9 +1,9 @@
 UserController
 ----------------
 
-	- La méthode DeleteUser marche mais seulement si le type de cette méthode dans le fichier routes est GET
+Done	- La méthode DeleteUser marche mais seulement si le type de cette méthode dans le fichier routes est GET
 
 DestinationController / TravelController / ...
 -----------------------------------------------
 
-	- Quelques détails de clean code sans doute/Optimisation de code
+Not much to do :')	- Quelques détails de clean code sans doute/Optimisation de code
