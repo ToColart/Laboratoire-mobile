@@ -22,3 +22,14 @@ Fields :
  - audio (String) : link of the audio file, which won't be hosted on the same server
  - coordx (Double)
  - coordy (Double)
+
+### /destination/getDestination/id
+Parameter : 
+ - id : the id of the requested Destination
+Fields : 
+ - id (Int)
+ - name (String)
+ - description (String)
+ - audio (String) : link of the audio file, which won't be hosted on the same server
+ - coordx (Double)
+ - coordy (Double)
