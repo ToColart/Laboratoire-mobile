@@ -27,11 +27,23 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
       .and((JsPath \ "humidity").read[Double])
       .and((JsPath \ "id_destination").read[Int])(Weather_information.apply _)
 
+  implicit val postWeatherRead: Reads[PostWeather] =
+    (JsPath \ "temperature").read[Double]
+      .and((JsPath \ "humidity").read[Double])
+      .and((JsPath \ "id_destination").read[Int])(PostWeather.apply _)
+
+  /**POST**/
+
   implicit val weatherWrite: Writes[Weather_information] =
     (JsPath \ "timeW").write[Date]
       .and((JsPath \ "temperature").write[Double])
       .and((JsPath \ "humidity").write[Double])
       .and((JsPath \ "id_destination").write[Int])(unlift(Weather_information.unapply))
+
+  implicit val postWeatherWrite: Writes[PostWeather] =
+    (JsPath \ "temperature").write[Double]
+      .and((JsPath \ "humidity").write[Double])
+      .and((JsPath \ "id_destination").write[Int])(unlift(PostWeather.unapply))
 
 
   def getWeathers(id:Int) = Action {
@@ -78,7 +90,7 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
   }
 
   def saveWeather = Action(parse.json) { request =>
-    val WeatherResult = request.body.validate[Weather_information]
+    val WeatherResult = request.body.validate[PostWeather]
     WeatherResult.fold(
       errors => {
         BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))

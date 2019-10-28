@@ -26,6 +26,8 @@ class TravelController @Inject()(db:Database, cc: ControllerComponents) extends 
       .and((JsPath \ "id_user").read[Int])
       .and((JsPath \ "hasVisited").read[Boolean])(Travel.apply _)
 
+  /**POST**/
+
   implicit val travelWrites: Writes[Travel] =
     (JsPath \ "id_destination").write[Int]
       .and((JsPath \ "id_user").write[Int])

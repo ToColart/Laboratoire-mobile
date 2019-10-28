@@ -20,7 +20,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
 
   /**--- Variables implicites ---**/
 
-  /**GET**/
+  /**POST**/
 
   implicit val destinationWrites: Writes[Destination] =
     (JsPath \ "id").write[Int]
@@ -37,7 +37,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       .and((JsPath \ "coordX").write[Double])
       .and((JsPath \ "coordY").write[Double])(unlift(PostDestination.unapply))
 
-  /**POST**/
+  /**GET**/
 
   implicit val destinationReads: Reads[Destination] =
     (JsPath \ "id").read[Int]
