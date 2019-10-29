@@ -7,9 +7,6 @@
 GET     	/                                   	controllers.HomeController.index
 GET     	/explore                            	controllers.HomeController.explore
 GET     	/tutorial                           	controllers.HomeController.tutorial
-GET     	/places                             	controllers.HomeController.listPlaces
-POST    	/places                             	controllers.HomeController.savePlace
-GET     	/testdb                             	controllers.HomeController.testDb
 GET     	/destination/getDestinations        	controllers.DestinationController.getDestinations
 GET     	/destination/getDestination/:id     	controllers.DestinationController.getDestination(id: Int)
 POST    	/destination/save                   	controllers.DestinationController.saveDestination

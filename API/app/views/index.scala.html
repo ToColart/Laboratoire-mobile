@@ -17,8 +17,20 @@
         <li>...</li>
       </ul>
 
+      <p>Voici donc les différentes URL pour récupérer les données énoncées auparavant :</p>
+      <h3>Données climatiques</h3>
+      <ul>
+        <li>Récupérer les données climatiques d'un point d'intérêt : <code>/weather/getWeathers/:id</code></li>
+        <li>Récupérer la donnée climatique la plus récente d'un point d'intérêt : <code>/weather/getMostRecentWeather/:id</code></li>
+      </ul><br>
+      <h3>Données relatives aux points d'intérêts</h3>
+      <ul>
+        <li>Récupérer les données relatives à un point d'intérêt : <code>/destination/getDestination/:id</code></li>
+        <li>Récupérer les données relatives de l'ensemble des points d'intérêts : <code>/destination/getDestinations/</code></li>
+      </ul>
+
       <p>Á noter que cette API a été réalisée en Scala via le framework <code>Play</code>. Ce qui suit consiste en une introduction au framework ainsi qu'une explication de son fonctionnement.</p>
-      <br><br>
+      <br>
       <p>If you loaded this page from the web server running on <code>localhost:9000</code>, congratulations! You have
         successfully built and run a Play application. If not, you likely opened the source <code>index.scala.html</code>
         file. Please follow the directions in the <code>README.md</code> file in the top-level project directory to run

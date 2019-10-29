@@ -2,20 +2,14 @@ package controllers
 
 import java.sql.PreparedStatement
 import java.util.Date
-
 import javax.inject._
 import model._
-import play.api._
 import play.api.db._
 import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
 @Singleton
 class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends AbstractController(cc) {
 
