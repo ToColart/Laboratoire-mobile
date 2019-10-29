@@ -6,7 +6,7 @@ import play.api.mvc._
 
 @Singleton
 class HomeController @Inject()(db:Database, cc: ControllerComponents) extends AbstractController(cc) {
-  
+
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
   }
