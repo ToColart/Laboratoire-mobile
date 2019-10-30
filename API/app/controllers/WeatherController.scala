@@ -1,7 +1,9 @@
 package controllers
 
-import java.sql.PreparedStatement
+import java.sql.{PreparedStatement, ResultSet}
+import java.time.LocalDateTime
 import java.util.Date
+
 import javax.inject._
 import model._
 import play.api.db._
@@ -16,7 +18,7 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
   /**GET**/
 
   implicit val weatherRead: Reads[Weather_information] =
-    (JsPath \ "timeW").read[Date]
+    (JsPath \ "timeW").read[LocalDateTime]
       .and((JsPath \ "temperature").read[Double])
       .and((JsPath \ "humidity").read[Double])
       .and((JsPath \ "id_destination").read[Int])(Weather_information.apply _)
@@ -29,7 +31,7 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
   /**POST**/
 
   implicit val weatherWrite: Writes[Weather_information] =
-    (JsPath \ "timeW").write[Date]
+    (JsPath \ "timeW").write[LocalDateTime]
       .and((JsPath \ "temperature").write[Double])
       .and((JsPath \ "humidity").write[Double])
       .and((JsPath \ "id_destination").write[Int])(unlift(Weather_information.unapply))
@@ -50,7 +52,7 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
       val rs   = stmt.executeQuery()
 
       while (rs.next()) {
-        weathers = Weather_information(rs.getDate("timeW"), rs.getDouble("temperature"), rs.getDouble("humidity"), rs.getInt("id_destination"))::weathers
+        weathers = createWeatherInfoFromResultLine(rs)::weathers
       }
     } finally {
       conn.close()
@@ -71,7 +73,7 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
       val rs = preparedStatement.executeQuery()
 
       if (rs.next()) {
-        val wea = Weather_information(rs.getDate("timeW"), rs.getDouble("temperature"), rs.getDouble("humidity"), rs.getInt("id_destination"))
+        val wea = createWeatherInfoFromResultLine(rs)
         Ok(Json.toJson(wea))
       }
       else {
@@ -81,6 +83,13 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
     finally {
       conn.close()
     }
+  }
+
+  def createWeatherInfoFromResultLine(rs:ResultSet) : Weather_information = {
+    Weather_information(rs.getTimestamp("timeW").toLocalDateTime,
+                        rs.getDouble("temperature"),
+                        rs.getDouble("humidity"),
+                        rs.getInt("id_destination"))
   }
 
   def saveWeather = Action(parse.json) { request =>
