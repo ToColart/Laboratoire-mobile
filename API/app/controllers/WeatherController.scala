@@ -2,7 +2,6 @@ package controllers
 
 import java.sql.{PreparedStatement, ResultSet}
 import java.time.LocalDateTime
-import java.util.Date
 import javax.inject._
 import model._
 import play.api.db._
@@ -20,11 +19,15 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
     (JsPath \ "timeW").read[LocalDateTime]
       .and((JsPath \ "temperature").read[Double])
       .and((JsPath \ "humidity").read[Double])
+      .and((JsPath \ "luminosity").read[Double])
+      .and((JsPath \ "sound").read[Double])
       .and((JsPath \ "id_destination").read[Int])(Weather_information.apply _)
 
   implicit val postWeatherRead: Reads[PostWeather] =
     (JsPath \ "temperature").read[Double]
       .and((JsPath \ "humidity").read[Double])
+      .and((JsPath \ "luminosity").read[Double])
+      .and((JsPath \ "sound").read[Double])
       .and((JsPath \ "id_destination").read[Int])(PostWeather.apply _)
 
   /**POST**/
@@ -33,11 +36,15 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
     (JsPath \ "timeW").write[LocalDateTime]
       .and((JsPath \ "temperature").write[Double])
       .and((JsPath \ "humidity").write[Double])
+      .and((JsPath \ "luminosity").write[Double])
+      .and((JsPath \ "sound").write[Double])
       .and((JsPath \ "id_destination").write[Int])(unlift(Weather_information.unapply))
 
   implicit val postWeatherWrite: Writes[PostWeather] =
     (JsPath \ "temperature").write[Double]
       .and((JsPath \ "humidity").write[Double])
+      .and((JsPath \ "luminosity").write[Double])
+      .and((JsPath \ "sound").write[Double])
       .and((JsPath \ "id_destination").write[Int])(unlift(PostWeather.unapply))
 
 
@@ -88,8 +95,12 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
     Weather_information(rs.getTimestamp("timeW").toLocalDateTime,
                         rs.getDouble("temperature"),
                         rs.getDouble("humidity"),
+                        rs.getDouble("luminosity"),
+                        rs.getDouble("sound"),
                         rs.getInt("id_destination"))
   }
+
+  //VA DEMANDER DES CHANGEMENTS, JE TE LAISSE FAIRE PIERRE
 
   def saveWeather = Action(parse.json) { request =>
     val WeatherResult = request.body.validate[PostWeather]
@@ -103,13 +114,14 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
         try {
           val insertStatement =
             """
-              | insert into weather_information (timeW, temperature, humidity, id_destination)
-              | values (CURRENT_TIMESTAMP(),?,?,?)
+              | insert into weather_information (timeW, temperature, humidity, luminosity, id_destination)
+              | values (CURRENT_TIMESTAMP(),?,?,?,?)
               """.stripMargin
           val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
           preparedStatement.setDouble(1, weather_information.temperature)
           preparedStatement.setDouble(2, weather_information.humidity)
-          preparedStatement.setInt(3, weather_information.id_destination)
+          preparedStatement.setDouble(3, weather_information.luminosity)
+          preparedStatement.setInt(4, weather_information.id_destination)
           preparedStatement.execute()
         } finally {
           conn.close()
