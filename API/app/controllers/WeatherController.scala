@@ -3,7 +3,6 @@ package controllers
 import java.sql.{PreparedStatement, ResultSet}
 import java.time.LocalDateTime
 import java.util.Date
-
 import javax.inject._
 import model._
 import play.api.db._
