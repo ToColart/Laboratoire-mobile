@@ -48,7 +48,7 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
       .and((JsPath \ "firstname").read[String])
       .and((JsPath \ "birthdate").read[Date])
       .and((JsPath \ "email").read[String])
-      .and((JsPath \ "password").read(minLength[String](6) andKeep pattern("(?=.*?[0-9])(?=.*?[A-Za-z]).+".r)))(PostUser.apply _)
+      .and((JsPath \ "password").read(minLength[String](6) andKeep pattern("(?=.*?[0-9])(?=.*?[A-Za-z]).+".r, "field must contain at least one character and one digit")))(PostUser.apply _)
 
   implicit val connectingUserReads: Reads[ConnectingUser] =
     (JsPath \ "email").read[String]
