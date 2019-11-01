@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AroundU</string>
+
+    <!--EXCEPTIONS-->
+    <string name="JSONException">An error occurred with JSON</string>
+    <string name="busNumberLabel">Numéro</string>
+    <string name="busDestinationLabel">Destination</string>
+    <string name="departureHourLabel">Départ</string>
+    <string name="ArrivalHourLabel">Arrivée</string>
+    <string name="busNumberLabelCropped">N°</string>
+    <string name="busDestinationLabelCropped">Destination</string>
+    <string name="departureHourLabelCropped">Dép</string>
+    <string name="ArrivalHourLabelCropped">Arr</string>
+
+</resources>
