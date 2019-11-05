@@ -10,6 +10,9 @@ To test it out, type localhost:9000 in your browser
 # How to test API on another device ? 
 Imao the easiest way to do so is to enable Windows 10 mobile hotspot. Once done, your computer IP address shoud default to 192.168.137.1. 
 Connect your device to your computer hotspot and add a firewall inbound and outbound rule allowing traffic from the subnetwork 192.168.137.0 mask 255.255.255.0 to port 9000. 
+
+# Test user credentials
+The DB contains a test user whose email is testAPI@test.com and password is Test123
 	
 # Available controllers
 ## Destination controller
