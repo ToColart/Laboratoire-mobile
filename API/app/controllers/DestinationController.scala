@@ -65,7 +65,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
 
     try {
       val stmt = conn.createStatement
-      val rs   = stmt.executeQuery("SELECT * FROM destination")
+      val rs   = stmt.executeQuery("SELECT * FROM destination ORDER BY id")
 
       while (rs.next()) {
         destinations = Destination(rs.getInt("id"), rs.getString("name"),rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"))::destinations

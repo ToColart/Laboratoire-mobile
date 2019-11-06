@@ -9,11 +9,12 @@ GET     	/explore                            	controllers.HomeController.explore
 GET     	/tutorial                           	controllers.HomeController.tutorial
 GET     	/destination/getDestinations        	controllers.DestinationController.getDestinations
 GET     	/destination/getDestination/:id     	controllers.DestinationController.getDestination(id: Int)
-GET        /destination/getDestinationAround        controllers.DestinationController.getDestinationAround(coordX :Double, coordY : Double, maxDistanceInKm:Double?=0.5)
+GET         /destination/getDestinationAround       controllers.DestinationController.getDestinationAround(coordX :Double, coordY : Double, maxDistanceInKm:Double?=0.5)
 POST    	/destination/save                   	controllers.DestinationController.saveDestination
 GET     	/user/getUsers                      	controllers.UserController.getUsers
 POST     	/user/getUser                       	controllers.UserController.getUser
 DELETE     	/user/deleteUser/:id                	controllers.UserController.deleteUser(id: Int)
+POST        /user/updateUserPassword                controllers.UserController.updateUserPassword
 GET     	/weather/getWeathers/:id            	controllers.WeatherController.getWeathers(id:Int)
 GET     	/weather/getMostRecentWeather/:id   	controllers.WeatherController.getMostRecentWeather(id:Int)
 POST        /weather/saveSound                      controllers.WeatherController.saveSound

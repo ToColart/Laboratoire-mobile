@@ -109,8 +109,6 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
                         rs.getInt("id_destination"))
   }
 
-  //VA DEMANDER DES CHANGEMENTS, JE TE LAISSE FAIRE PIERRE
-
   private def getCurrentInterval : (LocalDateTime, LocalDateTime) = {
     var intervalBeginning = LocalDateTime.now()
     intervalBeginning = intervalBeginning.minusNanos(intervalBeginning.getNano)

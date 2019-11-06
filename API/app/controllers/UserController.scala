@@ -62,7 +62,7 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
 
     try {
       val stmt = conn.createStatement
-      val rs   = stmt.executeQuery("SELECT * FROM user")
+      val rs   = stmt.executeQuery("SELECT * FROM user ORDER BY id")
 
       while (rs.next()) {
         users = User(rs.getInt("id"), rs.getString("name"), rs.getString("firstname"), rs.getDate("birthdate"), rs.getString("email"), rs.getString("password"))::users
@@ -138,6 +138,48 @@ class UserController @Inject()(db:Database, cc: ControllerComponents) extends Ab
     finally {
       conn.close()
     }
+  }
+
+  def updateUserPassword = Action(parse.json) { request =>
+    val userResult = request.body.validate[ConnectingUser]
+    userResult.fold(
+      errors => {
+        BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
+      },
+      user => {
+        val conn = db.getConnection()
+        try {
+          val select = "SELECT count(*) FROM User WHERE email = ?".stripMargin
+          val prepSelect: PreparedStatement = conn.prepareStatement(select)
+          prepSelect.setString(1, user.email)
+          val rs = prepSelect.executeQuery()
+
+          var count = -1
+          if (rs.next) count = rs.getInt(1)
+
+          if (count == 1) {
+            val insertStatement =
+              """
+                | update user set password = ? WHERE email = ?
+              """.stripMargin
+
+            val preparedStatement: PreparedStatement = conn.prepareStatement(insertStatement)
+            val password = HashingPassword.getHash(user.password)
+            preparedStatement.setString(1, password)
+            preparedStatement.setString(2, user.email)
+            preparedStatement.execute()
+
+            Accepted(Json.obj("status" -> "OK", "message" -> "Password updated"))
+          }
+          else {
+            BadRequest(Json.obj("status" -> "KO", "error" -> "Utilisateur inexistant"))
+          }
+        }
+        finally {
+          conn.close()
+        }
+      }
+    )
   }
 
   /**POST**/
