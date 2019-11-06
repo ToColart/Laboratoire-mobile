@@ -9,7 +9,7 @@ GET     	/explore                            	controllers.HomeController.explore
 GET     	/tutorial                           	controllers.HomeController.tutorial
 GET     	/destination/getDestinations        	controllers.DestinationController.getDestinations
 GET     	/destination/getDestination/:id     	controllers.DestinationController.getDestination(id: Int)
-POST        /destination/getDestinationAround       controllers.DestinationController.getDestinationAround
+GET        /destination/getDestinationAround        controllers.DestinationController.getDestinationAround(coordX :Double, coordY : Double)
 POST    	/destination/save                   	controllers.DestinationController.saveDestination
 GET     	/user/getUsers                      	controllers.UserController.getUsers
 POST     	/user/getUser                       	controllers.UserController.getUser

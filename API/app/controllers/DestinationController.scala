@@ -101,34 +101,26 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
     }
   }
 
-  def getDestinationAround = Action(parse.json) { request =>
-    val destinationResult = request.body.validate[CoordArroundData]
-    destinationResult.fold(
-      errors => {
-        BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
-      },
-      destination => {
-        var destinations = List[Destination]()
-        val conn = db.getConnection()
+  def getDestinationAround(coordX:Double, coordY:Double) = Action {
+    var destinations = List[Destination]()
+    val conn = db.getConnection()
 
-        try {     //Pour l'exemple --> coordX = 50.46200 et coordY = 4.862092
-          val insertStatement =  "SELECT * FROM DESTINATION WHERE COORDX BETWEEN ? - 0.01 AND ? + 0.01 AND COORDY BETWEEN ? - 0.01 AND ? + 0.01".stripMargin
-          val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
-          preparedStatement.setDouble(1, destination.coordX)
-          preparedStatement.setDouble(2, destination.coordX)
-          preparedStatement.setDouble(3, destination.coordY)
-          preparedStatement.setDouble(4, destination.coordY)
-          val rs = preparedStatement.executeQuery()
+    try {     //Pour l'exemple --> coordX = 50.46200 et coordY = 4.862092
+      val insertStatement =  "SELECT * FROM DESTINATION WHERE COORDX BETWEEN ? - 0.01 AND ? + 0.01 AND COORDY BETWEEN ? - 0.01 AND ? + 0.01".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      preparedStatement.setDouble(1, coordX)
+      preparedStatement.setDouble(2, coordX)
+      preparedStatement.setDouble(3, coordY)
+      preparedStatement.setDouble(4, coordY)
+      val rs = preparedStatement.executeQuery()
 
-          while (rs.next()) {
-            destinations = Destination(rs.getInt("id"), rs.getString("name"),rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"))::destinations
-          }
-        } finally {
-          conn.close()
-        }
-        Ok(Json.toJson(destinations))
+      while (rs.next()) {
+        destinations = Destination(rs.getInt("id"), rs.getString("name"),rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"))::destinations
       }
-    )
+    } finally {
+      conn.close()
+    }
+    Ok(Json.toJson(destinations))
   }
 
   def saveDestination = Action(parse.json) { request =>
