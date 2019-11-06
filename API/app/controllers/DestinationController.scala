@@ -111,6 +111,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       preparedStatement.setDouble(1, coordX)
       preparedStatement.setDouble(2, coordY)
       preparedStatement.setDouble(3, maxDistanceInKm)
+
       val rs = preparedStatement.executeQuery()
 
       while (rs.next()) {
