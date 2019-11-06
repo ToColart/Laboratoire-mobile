@@ -106,12 +106,12 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
     val conn = db.getConnection()
 
     try {     //Pour l'exemple --> coordX = 50.46200 et coordY = 4.862092
-      val insertStatement =  "SELECT * FROM DESTINATION WHERE COORDX BETWEEN ? - 0.01 AND ? + 0.01 AND COORDY BETWEEN ? - 0.01 AND ? + 0.01".stripMargin
+      val insertStatement =  "SELECT * FROM DESTINATION WHERE COORDX BETWEEN ? AND ? AND COORDY BETWEEN ? AND ?".stripMargin
       val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
-      preparedStatement.setDouble(1, coordX)
-      preparedStatement.setDouble(2, coordX)
-      preparedStatement.setDouble(3, coordY)
-      preparedStatement.setDouble(4, coordY)
+      preparedStatement.setDouble(1, coordX - 0.01)
+      preparedStatement.setDouble(2, coordX + 0.01)
+      preparedStatement.setDouble(3, coordY - 0.01)
+      preparedStatement.setDouble(4, coordY + 0.01)
       val rs = preparedStatement.executeQuery()
 
       while (rs.next()) {
