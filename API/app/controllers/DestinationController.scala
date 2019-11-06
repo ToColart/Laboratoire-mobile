@@ -101,17 +101,16 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
     }
   }
 
-  def getDestinationAround(coordX:Double, coordY:Double) = Action {
+  def getDestinationAround(coordX:Double, coordY:Double, maxDistanceInKm:Double) = Action {
     var destinations = List[Destination]()
     val conn = db.getConnection()
 
     try {     //Pour l'exemple --> coordX = 50.46200 et coordY = 4.862092
-      val insertStatement =  "SELECT * FROM DESTINATION WHERE COORDX BETWEEN ? - 0.01 AND ? + 0.01 AND COORDY BETWEEN ? - 0.01 AND ? + 0.01".stripMargin
-      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      val altStatement = "SELECT * FROM (SELECT *, 111*SQRT(POWER(COORDX - ?,2)+POWER(COORDY - ?,2)) as DIST_IN_KM FROM DESTINATION) as X WHERE X.DIST_IN_KM < ?"
+      val preparedStatement:PreparedStatement = conn.prepareStatement(/*insertStatement*/altStatement)
       preparedStatement.setDouble(1, coordX)
-      preparedStatement.setDouble(2, coordX)
-      preparedStatement.setDouble(3, coordY)
-      preparedStatement.setDouble(4, coordY)
+      preparedStatement.setDouble(2, coordY)
+      preparedStatement.setDouble(3, maxDistanceInKm)
       val rs = preparedStatement.executeQuery()
 
       while (rs.next()) {
