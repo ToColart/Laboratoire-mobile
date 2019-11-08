@@ -15395,3 +15395,15 @@ org.h2.jdbc.JdbcSQLException: Parameter "#6" is not set; SQL statement:
 	at akka.dispatch.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339)
 	at akka.dispatch.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979)
 	at akka.dispatch.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107)
+2019-11-08 12:47:17 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PICTURE VARCHAR(6000)": "'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXFxcaFxgYFRgYGhcaFxgYGBgYFRYbHSggGRolGxcXIjEhJSkrLi4u... (14723)"; SQL statement:
+UPDATE "PUBLIC"."DESTINATION" SET "ID"=? ,"NAME"=? ,"DESCRIPTION"=? ,"AUDIO"=? ,"COORDX"=? ,"COORDY"=? ,"PICTURE"=?  WHERE "ID"=? [22001-192]
+2019-11-08 12:47:17 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PICTURE VARCHAR(6000)": "'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXFxcaFxgYFRgYGhcaFxgYGBgYFRYbHSggGRolGxcXIjEhJSkrLi4u... (14723)"; SQL statement:
+UPDATE "PUBLIC"."DESTINATION" SET "ID"=? ,"NAME"=? ,"DESCRIPTION"=? ,"AUDIO"=? ,"COORDX"=? ,"COORDY"=? ,"PICTURE"=?  WHERE "ID"=? [22001-192]
+2019-11-08 12:48:50 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PICTURE VARCHAR(6000)": "'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEhUSExMWFRUVFxUXFRYWGRcXFxgWFxcXFxgXFxUYHSggGBolHRUXITEhJSkrLi4u... (12143)"; SQL statement:
+UPDATE "PUBLIC"."DESTINATION" SET "ID"=? ,"NAME"=? ,"DESCRIPTION"=? ,"AUDIO"=? ,"COORDX"=? ,"COORDY"=? ,"PICTURE"=?  WHERE "ID"=? [22001-192]
+2019-11-08 12:48:50 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PICTURE VARCHAR(6000)": "'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEhUSExMWFRUVFxUXFRYWGRcXFxgWFxcXFxgXFxUYHSggGBolHRUXITEhJSkrLi4u... (12143)"; SQL statement:
+UPDATE "PUBLIC"."DESTINATION" SET "ID"=? ,"NAME"=? ,"DESCRIPTION"=? ,"AUDIO"=? ,"COORDX"=? ,"COORDY"=? ,"PICTURE"=?  WHERE "ID"=? [22001-192]
