@@ -23,14 +23,16 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       .and((JsPath \ "description").write[String])
       .and((JsPath \ "audio").write[String])
       .and((JsPath \ "coordX").write[Double])
-      .and((JsPath \ "coordY").write[Double])(unlift(Destination.unapply))
+      .and((JsPath \ "coordY").write[Double])
+      .and((JsPath \ "picture").write[String])(unlift(Destination.unapply))
 
   implicit val postDestinationWrites: Writes[PostDestination] =
       (JsPath \ "name").write[String]
       .and((JsPath \ "description").write[String])
       .and((JsPath \ "audio").write[String])
       .and((JsPath \ "coordX").write[Double])
-      .and((JsPath \ "coordY").write[Double])(unlift(PostDestination.unapply))
+      .and((JsPath \ "coordY").write[Double])
+      .and((JsPath \ "picture").write[String])(unlift(PostDestination.unapply))
 
   implicit val CoordAroundWrites: Writes[CoordArroundData] =
     (JsPath \ "coordX").write[Double]
@@ -44,14 +46,16 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       .and((JsPath \ "description").read[String])
       .and((JsPath \ "audio").read[String])
       .and((JsPath \ "coordX").read[Double])
-      .and((JsPath \ "coordY").read[Double])(Destination.apply _)
+      .and((JsPath \ "coordY").read[Double])
+      .and((JsPath \ "picture").read[String])(Destination.apply _)
 
   implicit val postDestinationReads: Reads[PostDestination] =
       (JsPath \ "name").read[String]
       .and((JsPath \ "description").read[String])
       .and((JsPath \ "audio").read[String])
       .and((JsPath \ "coordX").read[Double])
-      .and((JsPath \ "coordY").read[Double])(PostDestination.apply _)
+      .and((JsPath \ "coordY").read[Double])
+      .and((JsPath \ "picture").read[String])(PostDestination.apply _)
 
   implicit val CoordAroundDataReads: Reads[CoordArroundData] =
       (JsPath \ "coordX").read[Double]
@@ -68,7 +72,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       val rs   = stmt.executeQuery("SELECT * FROM destination ORDER BY id")
 
       while (rs.next()) {
-        destinations = Destination(rs.getInt("id"), rs.getString("name"),rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"))::destinations
+        destinations = Destination(rs.getInt("id"), rs.getString("name"),rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"), rs.getString("picture"))::destinations
       }
     } finally {
       conn.close()
@@ -89,7 +93,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       val rs = preparedStatement.executeQuery()
 
       if (rs.next()) {
-        val dest = Destination(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"))
+        val dest = Destination(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"), rs.getString("picture"))
         Ok(Json.toJson(dest))
       }
       else {
@@ -115,7 +119,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       val rs = preparedStatement.executeQuery()
 
       while (rs.next()) {
-        destinations = Destination(rs.getInt("id"), rs.getString("name"),rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"))::destinations
+        destinations = Destination(rs.getInt("id"), rs.getString("name"),rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"), rs.getString("picture"))::destinations
       }
     } finally {
       conn.close()
@@ -135,8 +139,8 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
         try {
           val insertStatement =
             """
-              | insert into destination (name, description, audio, coordx, coordy)
-              | values (?,?,?,?,?)
+              | insert into destination (name, description, audio, coordx, coordy, picture)
+              | values (?,?,?,?,?,?)
               """.stripMargin
           val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
           preparedStatement.setString(1, destination.name)
@@ -144,6 +148,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
           preparedStatement.setString(3, destination.audio)
           preparedStatement.setDouble(4, destination.coordX)
           preparedStatement.setDouble(5, destination.coordY)
+          preparedStatement.setString(6, destination.picture)
           preparedStatement.execute()
         } finally {
           conn.close()

@@ -1,6 +1,6 @@
 package model
 
-case class PostDestination(name:String, description:String, audio:String, coordX:Double, coordY:Double)
+case class PostDestination(name:String, description:String, audio:String, coordX:Double, coordY:Double, picture:String)
 {
   /*------REQUIRE------*/
 
