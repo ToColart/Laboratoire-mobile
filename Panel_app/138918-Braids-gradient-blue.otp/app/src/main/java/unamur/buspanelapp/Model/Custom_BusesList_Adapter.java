@@ -32,7 +32,7 @@ public class Custom_BusesList_Adapter extends ArrayAdapter<BusModel> {
             TextView lastStop = shapeOfList.findViewById(R.id.busDestination);
             lastStop.setText(bus.getStopsList().get(bus.getStopsList().size() - 1).getName());
 
-            //TODO add liste des stops parcourus par le bus sous la destination finale
+            //TODO add liste des stops à parcourir par le bus sous la destination finale
 
             TextView departureHour = shapeOfList.findViewById(R.id.departureHour);
             departureHour.setText(bus.getDepartureHour());
