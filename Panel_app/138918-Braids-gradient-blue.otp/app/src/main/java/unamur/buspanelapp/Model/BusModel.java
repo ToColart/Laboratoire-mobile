@@ -1,8 +1,9 @@
 package unamur.buspanelapp.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BusModel {
+public class BusModel implements Serializable {
     private Integer number;
     private ArrayList<StopModel> stopsList;
     private String departureHour;

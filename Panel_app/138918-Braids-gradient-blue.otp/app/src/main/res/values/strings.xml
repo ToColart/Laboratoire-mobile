@@ -3,13 +3,17 @@
 
     <!--EXCEPTIONS-->
     <string name="JSONException">An error occurred with JSON</string>
+    <string name="error_get_all_points_of_interest_exception">An error occurred while getting points of interest data</string>
+    <string name="error_gps_permission">"Give permission to access location"</string>
+
+
     <string name="busNumberLabel">Numéro</string>
     <string name="busDestinationLabel">Destination</string>
     <string name="departureHourLabel">Départ</string>
-    <string name="ArrivalHourLabel">Arrivée</string>
+    <string name="arrivalHourLabel">Arrivée</string>
     <string name="busNumberLabelCropped">N°</string>
     <string name="busDestinationLabelCropped">Destination</string>
-    <string name="departureHourLabelCropped">Dép</string>
-    <string name="ArrivalHourLabelCropped">Arr</string>
+    <string name="departureHourLabelCropped">Départ</string>
+    <string name="arrivalHourLabelCropped">Arrivée</string>
 
 </resources>
