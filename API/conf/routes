@@ -21,6 +21,7 @@ POST        /weather/saveSound                      controllers.WeatherControlle
 POST    	/weather/saveWeather                	controllers.WeatherController.saveWeather
 POST    	/user/save                          	controllers.UserController.saveUser
 GET     	/travel/getTravels/:idUser          	controllers.TravelController.getTravels(idUser: Int)
+GET         /travel/getTravelsAround                controllers.TravelController.getTravelsVisitedAround(idUser: Int, coordX:Double, coordY:Double, maxDistanceInKm: Double?=0.5)
 POST    	/travel/save                        	controllers.TravelController.saveTravel
 
 # Map static resources from the /public folder to the /assets URL path

@@ -48,6 +48,29 @@ class TravelController @Inject()(db:Database, cc: ControllerComponents) extends 
     }
   }
 
+  def getTravelsVisitedAround(idUser: Int, coordX:Double, coordY:Double, maxDistanceInKm: Double) = Action {
+    var listId = List[Int]()
+    val conn   = db.getConnection()
+
+    try {
+      val insertStatement =  "SELECT id_destination FROM (SELECT *, 111*SQRT(POWER(COORDX - ?,2)+POWER(COORDY - ?,2)) as DIST_IN_KM FROM DESTINATION) as X, travel as t WHERE X.DIST_IN_KM < ? AND t.id_user = ? AND t.id_destination = x.id ".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      preparedStatement.setDouble(1, coordX)
+      preparedStatement.setDouble(2, coordY)
+      preparedStatement.setDouble(3, maxDistanceInKm)
+      preparedStatement.setInt(4, idUser)
+      val rs = preparedStatement.executeQuery()
+
+      while(rs.next()) {
+        listId = rs.getInt("id_destination") :: listId
+      }
+      Ok(Json.toJson(listId))
+    }
+    finally {
+      conn.close()
+    }
+  }
+
   def saveTravel = Action(parse.json) { request =>
     val travel = request.body.validate[Travel]
     travel.fold(
