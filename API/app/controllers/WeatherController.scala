@@ -28,33 +28,21 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
   implicit val postWeatherRead: Reads[PostWeather] =
     (JsPath \ "temperature").read[Double]
       .and((JsPath \ "humidity").read[Double])
-      .and((JsPath \ "luminosity").read[Double])
       .and((JsPath \ "id_destination").read[Int])(PostWeather.apply _)
-
-  implicit val postSoundRead: Reads[PostSound] =
-    (JsPath \ "sound").read[Double]
-      .and((JsPath \ "id_destination").read[Int])(PostSound.apply _)
 
   /**POST**/
 
   implicit val weatherWrite: Writes[Weather_information] =
     (JsPath \ "beginning").write[LocalDateTime]
       .and((JsPath \ "ending").write[LocalDateTime])
-      .and((JsPath \ "temperature").write[Option[Double]])
-      .and((JsPath \ "humidity").write[Option[Double]])
-      .and((JsPath \ "luminosity").write[Option[Double]])
-      .and((JsPath \ "sound").write[Option[Double]])
+      .and((JsPath \ "temperature").write[Double])
+      .and((JsPath \ "humidity").write[Double])
       .and((JsPath \ "id_destination").write[Int])(unlift(Weather_information.unapply))
 
   implicit val postWeatherWrite: Writes[PostWeather] =
     (JsPath \ "temperature").write[Double]
       .and((JsPath \ "humidity").write[Double])
-      .and((JsPath \ "luminosity").write[Double])
       .and((JsPath \ "id_destination").write[Int])(unlift(PostWeather.unapply))
-
-  implicit val postSoundWrite: Writes[PostSound] =
-    (JsPath \ "sound").write[Double]
-      .and((JsPath \ "id_destination").write[Int])(unlift(PostSound.unapply))
 
   def getWeathers(id:Int) = Action {
     var weathers = List[Weather_information]()
@@ -102,10 +90,8 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
   def createWeatherInfoFromResultLine(rs:ResultSet) : Weather_information = {
     Weather_information(rs.getTimestamp("beginning").toLocalDateTime,
                         rs.getTimestamp("ending").toLocalDateTime,
-                        if(rs.getObject("temperature") != null) Some(rs.getDouble("temperature")) else None,
-                        if(rs.getObject("humidity") != null) Some(rs.getDouble("humidity")) else None,
-                        if(rs.getObject("luminosity") != null) Some(rs.getDouble("luminosity")) else None,
-                        if(rs.getObject("sound") != null) Some(rs.getDouble("sound")) else None,
+                        rs.getDouble("temperature"),
+                        rs.getDouble("humidity"),
                         rs.getInt("id_destination"))
   }
 
@@ -140,77 +126,29 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
             val updateStatement =
               """
                 | update WEATHER_INFORMATION
-                | set humidity = ?, temperature = ?, luminosity = ?
+                | set humidity = ?, temperature = ?
                 | where id_destination = ? and beginning = ? and ending = ?
                 |""".stripMargin
             val ps = conn.prepareStatement(updateStatement)
             ps.setDouble(1, weather_information.humidity)
             ps.setDouble(2, weather_information.temperature)
-            ps.setDouble(3, weather_information.luminosity)
-            ps.setInt(4, weather_information.id_destination)
-            ps.setTimestamp(5, Timestamp.valueOf(interval._1))
-            ps.setTimestamp(6, Timestamp.valueOf(interval._2))
+            ps.setInt(3, weather_information.id_destination)
+            ps.setTimestamp(4, Timestamp.valueOf(interval._1))
+            ps.setTimestamp(5, Timestamp.valueOf(interval._2))
             ps.execute()
           }
           else {
             val insertStatement =
               """
-                | insert into weather_information (beginning, ending, temperature, humidity, luminosity, id_destination)
-                | values (?,?,?,?,?,?)
+                | insert into weather_information (beginning, ending, temperature, humidity, id_destination)
+                | values (?,?,?,?,?)
               """.stripMargin
             val preparedStatement: PreparedStatement = conn.prepareStatement(insertStatement)
             preparedStatement.setTimestamp(1, Timestamp.valueOf(interval._1))
             preparedStatement.setTimestamp(2, Timestamp.valueOf(interval._2))
             preparedStatement.setDouble(3, weather_information.temperature)
             preparedStatement.setDouble(4, weather_information.humidity)
-            preparedStatement.setDouble(5, weather_information.luminosity)
-            preparedStatement.setInt(6, weather_information.id_destination)
-            preparedStatement.execute()
-          }
-        }
-        finally {
-          conn.close
-        }
-        Created(Json.obj("status" -> "OK", "message" -> ("Weather created in interval " + interval._1 + " to " + interval._2)))
-      }
-    )
-  }
-
-  def saveSound = Action(parse.json) { request =>
-    val SoundResult = request.body.validate[PostSound]
-    val interval = getCurrentInterval
-    SoundResult.fold(
-      errors => {
-        BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
-      },
-      sound_information => {
-        val conn = db.getConnection()
-        try {
-          if (checkIfIntervalExists(conn, interval, sound_information.id_destination)) {
-            val updateStatement =
-              """
-                | update WEATHER_INFORMATION
-                | set sound = ?
-                | where id_destination = ? and beginning = ? and ending = ?
-                |""".stripMargin
-            val ps = conn.prepareStatement(updateStatement)
-            ps.setDouble(1, sound_information.sound)
-            ps.setInt(2, sound_information.id_destination)
-            ps.setTimestamp(3, Timestamp.valueOf(interval._1))
-            ps.setTimestamp(4, Timestamp.valueOf(interval._2))
-            ps.execute()
-          }
-          else {
-            val insertStatement =
-              """
-                | insert into weather_information (beginning, ending, sound, id_destination)
-                | values (?,?,?,?,?,?)
-              """.stripMargin
-            val preparedStatement: PreparedStatement = conn.prepareStatement(insertStatement)
-            preparedStatement.setTimestamp(1, Timestamp.valueOf(interval._1))
-            preparedStatement.setTimestamp(2, Timestamp.valueOf(interval._2))
-            preparedStatement.setDouble(3, sound_information.sound)
-            preparedStatement.setInt(4, sound_information.id_destination)
+            preparedStatement.setInt(5, weather_information.id_destination)
             preparedStatement.execute()
           }
         }

@@ -17,7 +17,6 @@ DELETE     	/user/deleteUser/:id                	controllers.UserController.dele
 POST        /user/updateUserPassword                controllers.UserController.updateUserPassword
 GET     	/weather/getWeathers/:id            	controllers.WeatherController.getWeathers(id:Int)
 GET     	/weather/getMostRecentWeather/:id   	controllers.WeatherController.getMostRecentWeather(id:Int)
-POST        /weather/saveSound                      controllers.WeatherController.saveSound
 POST    	/weather/saveWeather                	controllers.WeatherController.saveWeather
 POST    	/user/save                          	controllers.UserController.saveUser
 GET     	/travel/getTravels/:idUser          	controllers.TravelController.getTravels(idUser: Int)
