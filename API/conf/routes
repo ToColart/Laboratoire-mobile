@@ -10,6 +10,7 @@ GET     	/tutorial                           	controllers.HomeController.tutoria
 GET     	/destination/getDestinations        	controllers.DestinationController.getDestinations
 GET     	/destination/getDestination/:id     	controllers.DestinationController.getDestination(id: Int)
 GET         /destination/getDestinationsAround      controllers.DestinationController.getDestinationAround(coordX :Double, coordY : Double, maxDistanceInKm:Double?=0.5)
+GET         /destination/getDestinationsAroundMult  controllers.DestinationController.getDestinationAroundMult(coordX:List[Double], coordY:List[Double], maxDistanceInKm:Double?=0.5)
 POST    	/destination/save                   	controllers.DestinationController.saveDestination
 GET     	/user/getUsers                      	controllers.UserController.getUsers
 POST     	/user/getUser                       	controllers.UserController.getUser

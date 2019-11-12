@@ -161,4 +161,33 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       }
     )
   }
+
+  def getDestinationAroundMult(coordX: List[Double], coordY: List[Double], maxDistanceInKm: Double): Action[AnyContent] = Action {
+    if(coordX.length != coordY.length) BadRequest("Different number of coordX and coordY")
+    else {
+      var destinations = List[Destination]()
+      val conn = db.getConnection()
+      try{
+      coordX.zip(coordY).foreach(coord => {
+          //Pour l'exemple --> coordX = 50.46200 et coordY = 4.862092
+          val altStatement = "SELECT * FROM (SELECT *, 111*SQRT(POWER(COORDX - ?,2)+POWER(COORDY - ?,2)) as DIST_IN_KM FROM DESTINATION) as X WHERE X.DIST_IN_KM < ?"
+          val preparedStatement: PreparedStatement = conn.prepareStatement(/*insertStatement*/ altStatement)
+          preparedStatement.setDouble(1, coord._1)
+          preparedStatement.setDouble(2, coord._2)
+          preparedStatement.setDouble(3, maxDistanceInKm)
+
+          val rs = preparedStatement.executeQuery()
+
+          while (rs.next()) {
+            val destination = Destination(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"), rs.getString("picture"), rs.getString("url"))
+            if(!destinations.contains(destination)) destinations = destination:: destinations
+          }
+        }
+        )
+      } finally {
+        conn.close()
+      }
+      Ok(Json.toJson(destinations))
+    }
+  }
 }
