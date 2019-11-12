@@ -1,6 +1,7 @@
 package controllers
 
-import java.sql.PreparedStatement
+import java.sql.{PreparedStatement, ResultSet}
+
 import javax.inject._
 import model._
 import play.api.db._
@@ -75,12 +76,24 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       val rs   = stmt.executeQuery("SELECT * FROM destination ORDER BY id")
 
       while (rs.next()) {
-        destinations = Destination(rs.getInt("id"), rs.getString("name"),rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"), rs.getString("picture"), rs.getString("url"))::destinations
+        destinations = createDestinationFromResultSet(rs)::destinations
       }
     } finally {
       conn.close()
     }
     Ok(Json.toJson(destinations))
+  }
+
+  private def createDestinationFromResultSet(rs: ResultSet):Destination = {
+    Destination(
+      rs.getInt("id"),
+      rs.getString("name"),
+      rs.getString("description"),
+      rs.getString("audio"),
+      rs.getDouble("coordX"),
+      rs.getDouble("coordY"),
+      rs.getString("picture"),
+      rs.getString("url"))
   }
 
   /**GET/id**/
@@ -96,7 +109,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       val rs = preparedStatement.executeQuery()
 
       if (rs.next()) {
-        val dest = Destination(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"), rs.getString("picture"), rs.getString("url"))
+        val dest = createDestinationFromResultSet(rs)
         Ok(Json.toJson(dest))
       }
       else {
@@ -122,7 +135,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       val rs = preparedStatement.executeQuery()
 
       while (rs.next()) {
-        destinations = Destination(rs.getInt("id"), rs.getString("name"),rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"), rs.getString("picture"), rs.getString("url"))::destinations
+        destinations = createDestinationFromResultSet(rs)::destinations
       }
     } finally {
       conn.close()
@@ -179,7 +192,7 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
           val rs = preparedStatement.executeQuery()
 
           while (rs.next()) {
-            val destination = Destination(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getString("audio"), rs.getDouble("coordX"), rs.getDouble("coordY"), rs.getString("picture"), rs.getString("url"))
+            val destination = createDestinationFromResultSet(rs)
             if(!destinations.contains(destination)) destinations = destination:: destinations
           }
         }
@@ -188,6 +201,27 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
         conn.close()
       }
       Ok(Json.toJson(destinations))
+    }
+  }
+
+  def getSelectedDestination(chipNr: Int) = Action {
+    val conn   = db.getConnection()
+
+    try {
+      val selectStatement =  "SELECT * FROM bus_stop, destination WHERE id_puce = ? AND bus_stop.id_destination = destination.id".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(selectStatement)
+      preparedStatement.setInt(1, chipNr)
+      val rs = preparedStatement.executeQuery()
+
+      if(rs.next()) {
+        Ok(Json.toJson(createDestinationFromResultSet(rs)))
+      }
+      else {
+        NotFound("Requested chip nr could not be found")
+      }
+    }
+    finally {
+      conn.close()
     }
   }
 }
