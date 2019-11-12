@@ -53,15 +53,16 @@ public class DetailsFragment extends Fragment {
             ArrayList<PointOfInterestModel> points = new ArrayList<>();
 
             try{
-                ArrayList<PointOfInterestModel> pointsToAdd;
-                for(StopModel currentStop: bus.getStopsList()){
+                //ArrayList<PointOfInterestModel> pointsToAdd;
+                points = busesDAO.getPointsOfInterestAroundAllStops(bus.getStopsList());
+                /*for(StopModel currentStop: bus.getStopsList()){
                     pointsToAdd = busesDAO.getPointsOfInterestAround(currentStop.getCoordX(), currentStop.getCoordY());
                     for(PointOfInterestModel pi : pointsToAdd){
                         if(!points.contains(pi))
                             points.add(pi);
                     }
                     //points.addAll(busesDAO.getPointsOfInterestAround(currentStop.getCoordX(), currentStop.getCoordY()));
-                }
+                }*/
             }
             /*catch (GetAllPointsOfInterestException e){
                 error = getString(R.string.error_get_all_points_of_interest_exception);
