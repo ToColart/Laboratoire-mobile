@@ -15559,3 +15559,6 @@ SELECT * FROM BUS_STOP, destination where bus_stop.id_destination = destination.
 	at org.h2.server.web.WebThread.process(WebThread.java:164)
 	at org.h2.server.web.WebThread.run(WebThread.java:89)
 	at java.base/java.lang.Thread.run(Thread.java:830)
+2019-11-18 09:56:46 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTRO[*] TRAVEL (ID_DESTINATION, ID_USER, HASVISITED) VALUES (3,225,TRUE) "; expected "INTO"; SQL statement:
+insert intro travel (id_destination, id_user, hasvisited) values (3,225,true) [42001-192]

@@ -48,6 +48,27 @@ class TravelController @Inject()(db:Database, cc: ControllerComponents) extends 
     }
   }
 
+  def getTravelsListUser(id_destination: Int) = Action {
+
+    var listId = List[Int]()
+    val conn   = db.getConnection()
+
+    try {
+      val insertStatement =  "SELECT id_user FROM travel WHERE id_destination = ?".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      preparedStatement.setInt(1, id_destination)
+      val rs = preparedStatement.executeQuery()
+
+      while(rs.next()) {
+        listId = rs.getInt("id_user") :: listId
+      }
+      Ok(Json.toJson(listId))
+    }
+    finally {
+      conn.close()
+    }
+  }
+
   def getTravelsVisitedAround(idUser: Int, coordX:Double, coordY:Double, maxDistanceInKm: Double) = Action {
     var listId = List[Int]()
     val conn   = db.getConnection()

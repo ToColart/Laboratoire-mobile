@@ -4,26 +4,27 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     	/                                   	controllers.HomeController.index
-GET     	/explore                            	controllers.HomeController.explore
-GET     	/tutorial                           	controllers.HomeController.tutorial
-GET     	/destination/getDestinations        	controllers.DestinationController.getDestinations
-GET     	/destination/getDestination/:id     	controllers.DestinationController.getDestination(id: Int)
-GET         /destination/getDestinationsAround      controllers.DestinationController.getDestinationAround(coordX :Double, coordY : Double, maxDistanceInKm:Double?=0.5)
-GET         /destination/getDestinationsAroundMult  controllers.DestinationController.getDestinationAroundMult(coordX:List[Double], coordY:List[Double], maxDistanceInKm:Double?=0.5)
-POST    	/destination/save                   	controllers.DestinationController.saveDestination
-GET         /destination/getSelectedDestination     controllers.DestinationController.getSelectedDestination(chipNr:Int)
-GET     	/user/getUsers                      	controllers.UserController.getUsers
-POST     	/user/getUser                       	controllers.UserController.getUser
-DELETE     	/user/deleteUser/:id                	controllers.UserController.deleteUser(id: Int)
-POST        /user/updateUserPassword                controllers.UserController.updateUserPassword
-GET     	/weather/getWeathers/:id            	controllers.WeatherController.getWeathers(id:Int)
-GET     	/weather/getMostRecentWeather/:id   	controllers.WeatherController.getMostRecentWeather(id:Int)
-POST    	/weather/saveWeather                	controllers.WeatherController.saveWeather
-POST    	/user/save                          	controllers.UserController.saveUser
-GET     	/travel/getTravels/:idUser          	controllers.TravelController.getTravels(idUser: Int)
-GET         /travel/getTravelsAround                controllers.TravelController.getTravelsVisitedAround(idUser: Int, coordX:Double, coordY:Double, maxDistanceInKm: Double?=0.5)
-POST    	/travel/save                        	controllers.TravelController.saveTravel
+GET     	/                                   	    controllers.HomeController.index
+GET     	/explore                            	    controllers.HomeController.explore
+GET     	/tutorial                           	    controllers.HomeController.tutorial
+GET     	/destination/getDestinations        	    controllers.DestinationController.getDestinations
+GET     	/destination/getDestination/:id     	    controllers.DestinationController.getDestination(id: Int)
+GET         /destination/getDestinationsAround          controllers.DestinationController.getDestinationAround(coordX :Double, coordY : Double, maxDistanceInKm:Double?=0.5)
+GET         /destination/getDestinationsAroundMult      controllers.DestinationController.getDestinationAroundMult(coordX:List[Double], coordY:List[Double], maxDistanceInKm:Double?=0.5)
+POST    	/destination/save                   	    controllers.DestinationController.saveDestination
+GET         /destination/getSelectedDestination         controllers.DestinationController.getSelectedDestination(chipNr:Int)
+GET     	/user/getUsers                      	    controllers.UserController.getUsers
+POST     	/user/getUser                       	    controllers.UserController.getUser
+DELETE     	/user/deleteUser/:id                	    controllers.UserController.deleteUser(id: Int)
+POST        /user/updateUserPassword                    controllers.UserController.updateUserPassword
+GET     	/weather/getWeathers/:id            	    controllers.WeatherController.getWeathers(id:Int)
+GET     	/weather/getMostRecentWeather/:id   	    controllers.WeatherController.getMostRecentWeather(id:Int)
+POST    	/weather/saveWeather                	    controllers.WeatherController.saveWeather
+POST    	/user/save                          	    controllers.UserController.saveUser
+GET     	/travel/getTravels/:idUser          	    controllers.TravelController.getTravels(idUser: Int)
+GET         /travel/getTravelsListUser/:id_destination  controllers.TravelController.getTravelsListUser(id_destination: Int)
+GET         /travel/getTravelsAround                    controllers.TravelController.getTravelsVisitedAround(idUser: Int, coordX:Double, coordY:Double, maxDistanceInKm: Double?=0.5)
+POST    	/travel/save                        	    controllers.TravelController.saveTravel
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
