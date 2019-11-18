@@ -23,6 +23,7 @@ POST    	/weather/saveWeather                	    controllers.WeatherController.
 POST    	/user/save                          	    controllers.UserController.saveUser
 GET     	/travel/getTravels/:idUser          	    controllers.TravelController.getTravels(idUser: Int)
 GET         /travel/getTravelsListUser/:id_destination  controllers.TravelController.getTravelsListUser(id_destination: Int)
+GET         /travel/getInfoVisited                      controllers.TravelController.getInfoVisited(id_user: Int, id_destination: Int)
 GET         /travel/getTravelsAround                    controllers.TravelController.getTravelsVisitedAround(idUser: Int, coordX:Double, coordY:Double, maxDistanceInKm: Double?=0.5)
 POST    	/travel/save                        	    controllers.TravelController.saveTravel
 

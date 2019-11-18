@@ -69,6 +69,29 @@ class TravelController @Inject()(db:Database, cc: ControllerComponents) extends 
     }
   }
 
+  def getInfoVisited(id_user: Int, id_destination: Int) = Action {
+
+    val conn = db.getConnection()
+
+    try {
+      val insertStatement =  "SELECT hasVisited FROM travel WHERE id_user = ? AND id_destination = ?".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(insertStatement)
+      preparedStatement.setInt(1, id_user)
+      preparedStatement.setInt(2, id_destination)
+      val rs = preparedStatement.executeQuery()
+
+      var has_visited = false
+
+      if(rs.next()) {
+        has_visited = rs.getBoolean("hasVisited")
+      }
+      Ok(Json.toJson(has_visited))
+    }
+    finally {
+      conn.close()
+    }
+  }
+
   def getTravelsVisitedAround(idUser: Int, coordX:Double, coordY:Double, maxDistanceInKm: Double) = Action {
     var listId = List[Int]()
     val conn   = db.getConnection()
