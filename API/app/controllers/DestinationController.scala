@@ -1,6 +1,7 @@
 package controllers
 
-import java.sql.{PreparedStatement, ResultSet}
+import java.sql.{PreparedStatement, ResultSet, Timestamp}
+import java.time.LocalDateTime
 
 import javax.inject._
 import model._
@@ -214,7 +215,10 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       val rs = preparedStatement.executeQuery()
 
       if(rs.next()) {
-        Ok(Json.toJson(createDestinationFromResultSet(rs)))
+        if(rs.getTimestamp("timestamp").toLocalDateTime.plusMinutes(30).isAfter(LocalDateTime.now()))
+          Ok(Json.toJson(createDestinationFromResultSet(rs)))
+        else
+          NoContent
       }
       else {
         NotFound("Requested chip nr could not be found")
@@ -229,14 +233,15 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
     val conn = db.getConnection()
 
     try {
-      val updateStatement =  "UPDATE bus_stop SET id_destination = ? WHERE id_stop = ?".stripMargin
+      val updateStatement =  "UPDATE bus_stop SET id_destination = ?, timestamp = ? WHERE id_stop = ?".stripMargin
       val preparedStatement:PreparedStatement = conn.prepareStatement(updateStatement)
       preparedStatement.setInt(1, idDestination)
-      preparedStatement.setInt(2, idStop)
+      preparedStatement.setInt(3, idStop)
+      preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()))
       val nbLinesUpdated = preparedStatement.executeUpdate()
 
       if(nbLinesUpdated > 0) {
-        Ok("Destination updated")
+        Ok
       }
       else {
         NotFound("Requested bus stop could not be found")

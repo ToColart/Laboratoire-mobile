@@ -15562,3 +15562,6 @@ SELECT * FROM BUS_STOP, destination where bus_stop.id_destination = destination.
 2019-11-18 09:56:46 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTRO[*] TRAVEL (ID_DESTINATION, ID_USER, HASVISITED) VALUES (3,225,TRUE) "; expected "INTO"; SQL statement:
 insert intro travel (id_destination, id_user, hasvisited) values (3,225,true) [42001-192]
+2019-11-19 12:52:02 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Data conversion error converting "2019-11-19 12:52:02.2485712"; SQL statement:
+UPDATE bus_stop SET id_destination = ?, timestamp = ? WHERE id_stop = ? [22018-192]
