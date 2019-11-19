@@ -13,6 +13,7 @@ GET         /destination/getDestinationsAround          controllers.DestinationC
 GET         /destination/getDestinationsAroundMult      controllers.DestinationController.getDestinationAroundMult(coordX:List[Double], coordY:List[Double], maxDistanceInKm:Double?=0.5)
 POST    	/destination/save                   	    controllers.DestinationController.saveDestination
 GET         /destination/getSelectedDestination         controllers.DestinationController.getSelectedDestination(chipNr:Int)
+PUT         /destination/setSelectedDestination         controllers.DestinationController.updateSelectedDestination(idStop : Int, idDestination : Int)
 GET     	/user/getUsers                      	    controllers.UserController.getUsers
 POST     	/user/getUser                       	    controllers.UserController.getUser
 DELETE     	/user/deleteUser/:id                	    controllers.UserController.deleteUser(id: Int)

@@ -224,4 +224,26 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
       conn.close()
     }
   }
+
+  def updateSelectedDestination(idStop : Int, idDestination : Int) = Action {
+    val conn = db.getConnection()
+
+    try {
+      val updateStatement =  "UPDATE bus_stop SET id_destination = ? WHERE id_stop = ?".stripMargin
+      val preparedStatement:PreparedStatement = conn.prepareStatement(updateStatement)
+      preparedStatement.setInt(1, idDestination)
+      preparedStatement.setInt(2, idStop)
+      val nbLinesUpdated = preparedStatement.executeUpdate()
+
+      if(nbLinesUpdated > 0) {
+        Ok("Destination updated")
+      }
+      else {
+        NotFound("Requested bus stop could not be found")
+      }
+    }
+    finally {
+      conn.close()
+    }
+  }
 }
