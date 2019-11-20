@@ -229,14 +229,14 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
     }
   }
 
-  def updateSelectedDestination(idStop : Int, idDestination : Int) = Action {
+  def updateSelectedDestination(idStop : String, idDestination : Int) = Action {
     val conn = db.getConnection()
 
     try {
       val updateStatement =  "UPDATE bus_stop SET id_destination = ?, timestamp = ? WHERE id_stop = ?".stripMargin
       val preparedStatement:PreparedStatement = conn.prepareStatement(updateStatement)
       preparedStatement.setInt(1, idDestination)
-      preparedStatement.setInt(3, idStop)
+      preparedStatement.setString(3, idStop)
       preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()))
       val nbLinesUpdated = preparedStatement.executeUpdate()
 

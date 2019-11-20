@@ -15565,3 +15565,57 @@ insert intro travel (id_destination, id_user, hasvisited) values (3,225,true) [4
 2019-11-19 12:52:02 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Data conversion error converting "2019-11-19 12:52:02.2485712"; SQL statement:
 UPDATE bus_stop SET id_destination = ?, timestamp = ? WHERE id_stop = ? [22018-192]
+2019-11-20 08:44:31 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE BUS_STOP (ID_STOP VARCHAR(50) PRIMARY KEY,ID_PUCE DECIMAL(9), ID_DESTINATION DECIMAL(9) FOREIGN[*] KEY REFERENCES DESTINATION(ID_DESTINATION), TIMESTAMP TIMESTAMP) "; expected "FOR, UNSIGNED, NOT, NULL, AS, DEFAULT, GENERATED, NOT, NULL, AUTO_INCREMENT, BIGSERIAL, SERIAL, IDENTITY, NULL_TO_DEFAULT, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, PRIMARY, UNIQUE, NOT, NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+create table bus_stop (id_stop varchar(50) primary key,ID_puce decimal(9), id_destination decimal(9) foreign key references destination(id_destination), timestamp timestamp) [42001-192]
+2019-11-20 08:48:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE BUS_STOP (ID_STOP VARCHAR(50) PRIMARY KEY,ID_PUCE DECIMAL(9), ID_DESTINATION DECIMAL(9) FOREIGN[*] KEY REFERENCES DESTINATION(ID), TIMESTAMP TIMESTAMP) "; expected "FOR, UNSIGNED, NOT, NULL, AS, DEFAULT, GENERATED, NOT, NULL, AUTO_INCREMENT, BIGSERIAL, SERIAL, IDENTITY, NULL_TO_DEFAULT, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, PRIMARY, UNIQUE, NOT, NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+create table bus_stop (id_stop varchar(50) primary key,ID_puce decimal(9), id_destination decimal(9) foreign key references destination(id), timestamp timestamp) [42001-192]
+2019-11-20 08:49:24 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Unknown data type: "FOREIGN"; SQL statement:
+create table bus_stop (id_stop varchar(50) primary key,ID_puce decimal(9), id_destination decimal(9), id_destination foreign key references destination(id), timestamp timestamp) [50004-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.command.Parser.parseColumnWithType(Parser.java:4079)
+	at org.h2.command.Parser.parseColumnForTable(Parser.java:3937)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:5972)
+	at org.h2.command.Parser.parseCreate(Parser.java:4237)
+	at org.h2.command.Parser.parsePrepared(Parser.java:362)
+	at org.h2.command.Parser.parse(Parser.java:317)
+	at org.h2.command.Parser.parse(Parser.java:289)
+	at org.h2.command.Parser.prepareCommand(Parser.java:254)
+	at org.h2.engine.Session.prepareLocal(Session.java:560)
+	at org.h2.engine.Session.prepareCommand(Session.java:501)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1202)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:170)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:158)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1388)
+	at org.h2.server.web.WebApp.query(WebApp.java:1061)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1023)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1010)
+	at org.h2.server.web.WebThread.process(WebThread.java:164)
+	at org.h2.server.web.WebThread.run(WebThread.java:89)
+	at java.base/java.lang.Thread.run(Thread.java:830)
+2019-11-20 08:50:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Column "DESTINATION_ID" not found; SQL statement:
+create table bus_stop (id_stop varchar(50) primary key,ID_puce decimal(9), id_destination decimal(9), foreign key (destination_id) references destination(id), timestamp timestamp) [42122-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.table.Table.getColumn(Table.java:682)
+	at org.h2.table.IndexColumn.mapColumns(IndexColumn.java:74)
+	at org.h2.command.ddl.AlterTableAddConstraint.tryUpdate(AlterTableAddConstraint.java:208)
+	at org.h2.command.ddl.AlterTableAddConstraint.update(AlterTableAddConstraint.java:77)
+	at org.h2.command.ddl.CreateTable.update(CreateTable.java:176)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:98)
+	at org.h2.command.Command.executeUpdate(Command.java:258)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:184)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:158)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1388)
+	at org.h2.server.web.WebApp.query(WebApp.java:1061)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1023)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1010)
+	at org.h2.server.web.WebThread.process(WebThread.java:164)
+	at org.h2.server.web.WebThread.run(WebThread.java:89)
+	at java.base/java.lang.Thread.run(Thread.java:830)
