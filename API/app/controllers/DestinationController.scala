@@ -205,13 +205,13 @@ class DestinationController @Inject()(db:Database, cc: ControllerComponents) ext
     }
   }
 
-  def getSelectedDestination(chipNr: Int) = Action {
+  def getSelectedDestination(idStop : String) = Action {
     val conn   = db.getConnection()
 
     try {
-      val selectStatement =  "SELECT * FROM bus_stop, destination WHERE id_puce = ? AND bus_stop.id_destination = destination.id".stripMargin
+      val selectStatement =  "SELECT * FROM bus_stop, destination WHERE id_stop = ? AND bus_stop.id_destination = destination.id".stripMargin
       val preparedStatement:PreparedStatement = conn.prepareStatement(selectStatement)
-      preparedStatement.setInt(1, chipNr)
+      preparedStatement.setString(1, idStop)
       val rs = preparedStatement.executeQuery()
 
       if(rs.next()) {
