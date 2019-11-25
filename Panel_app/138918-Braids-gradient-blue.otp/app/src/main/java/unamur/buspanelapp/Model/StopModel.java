@@ -3,6 +3,7 @@ package unamur.buspanelapp.Model;
 import java.io.Serializable;
 
 public class StopModel implements Serializable {
+    private String id;
     private String name;
     private String coordX;
     private String coordY;
@@ -10,7 +11,8 @@ public class StopModel implements Serializable {
     public StopModel() {
     }
 
-    public StopModel(String name, String coordX, String coordY) {
+    public StopModel(String id, String name, String coordX, String coordY) {
+        this.setId(id);
         this.setName(name);
         this.setCoordX(coordX);
         this.setCoordY(coordY);
@@ -27,6 +29,14 @@ public class StopModel implements Serializable {
     public boolean equals(Object o) {
         if (o == null || !o.getClass().equals(getClass())) { return false; }
         return equals((StopModel) o);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

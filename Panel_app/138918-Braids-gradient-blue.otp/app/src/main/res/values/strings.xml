@@ -15,5 +15,7 @@
     <string name="busDestinationLabelCropped">Destination</string>
     <string name="departureHourLabelCropped">Départ</string>
     <string name="arrivalHourLabelCropped">Arrivée</string>
+    <string name="description_text_default">Sélectionnez un point d\'intérêt et scannez votre téléphone sur la borne pour en savoir plus!</string>
+    <string name="description_text_pi_selected">Scannez votre téléphone sur la borne pour en savoir plus!</string>
 
 </resources>

@@ -3,6 +3,7 @@ package unamur.buspanelapp.Model;
 import java.io.Serializable;
 
 public class PointOfInterestModel implements Serializable {
+    private Integer id;
     private String name;
     private String description;
     private String picture;
@@ -13,7 +14,8 @@ public class PointOfInterestModel implements Serializable {
     public PointOfInterestModel() {
     }
 
-    public PointOfInterestModel(String name, String description, String picture, String audioGuide, String coordX, String coordY) {
+    public PointOfInterestModel(Integer id, String name, String description, String picture, String audioGuide, String coordX, String coordY) {
+        this.setId(id);
         this.setName(name);
         this.setDescription(description);
         this.setPicture(picture);
@@ -36,6 +38,14 @@ public class PointOfInterestModel implements Serializable {
     public boolean equals(Object o) {
         if (o == null || !o.getClass().equals(getClass())) { return false; }
         return equals((PointOfInterestModel) o);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

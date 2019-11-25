@@ -27,7 +27,9 @@ public class ConverterJSON implements Converter {
         for(int i = 0; i<jsonArray.length();i++){
             jsonGarden = jsonArray.getJSONObject(i);
 
-            PIs.add(new PointOfInterestModel(jsonGarden.get("name").toString(),
+            PIs.add(new PointOfInterestModel(
+                    Integer.parseInt(jsonGarden.get("id").toString()),
+                    jsonGarden.get("name").toString(),
                     jsonGarden.getString("description"),
                     jsonGarden.getString("picture"),
                     jsonGarden.getString("audio"),
@@ -53,7 +55,9 @@ public class ConverterJSON implements Converter {
         JSONObject jsonStop = new JSONObject(stringJSON);
         JSONObject jsonFirstStop = jsonStop.getJSONArray("records").getJSONObject(0);
 
-        return new StopModel(jsonFirstStop.getJSONObject("fields").getString("pot_nom_ha"),
+        return new StopModel(
+                jsonFirstStop.getJSONObject("fields").getString("pot_zone_t"),
+                jsonFirstStop.getJSONObject("fields").getString("pot_nom_ha"),
                 jsonFirstStop.getJSONObject("fields").getJSONArray("geo_point_2d").get(0).toString(),
                 jsonFirstStop.getJSONObject("fields").getJSONArray("geo_point_2d").get(1).toString());
     }
@@ -67,7 +71,9 @@ public class ConverterJSON implements Converter {
         for(int i = 0; i<jsonArray.length();i++){
             jsonStop = jsonArray.getJSONObject(i);
 
-            stops.add(new StopModel(jsonStop.getJSONObject("fields").getString("pot_nom_ha"),
+            stops.add(new StopModel(
+                    jsonStop.getJSONObject("fields").getString("pot_zone_t"),
+                    jsonStop.getJSONObject("fields").getString("pot_nom_ha"),
                     jsonStop.getJSONObject("fields").getJSONArray("geo_point_2d").getString(0),
                     jsonStop.getJSONObject("fields").getJSONArray("geo_point_2d").getString(1)));
 

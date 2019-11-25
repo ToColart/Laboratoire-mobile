@@ -75,25 +75,44 @@
                     android:background="@color/grayTEC"/>
             </LinearLayout>
         </LinearLayout>
-        <Button
+        <ImageButton
             android:id="@+id/fullScreenFirstScreenBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="|_|"
-            android:drawable="@android:drawable/menu_full_frame"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/full_screen"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:visibility="gone"/>
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/wayDetails"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1"
+    <RelativeLayout
+        android:id="@+id/displayable"
         android:layout_width="0dp"
-        android:visibility="gone"/>
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone">
+        <ScrollView
+            android:id="@+id/scrollViewFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/piDescription">
+                <FrameLayout
+                    android:id="@+id/wayDetails"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"/>
+        </ScrollView>
+        <TextView
+            android:id="@+id/piDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
+    </RelativeLayout>
     <!--<LinearLayout
         android:id="@+id/wayDetails"
         android:layout_height="match_parent"

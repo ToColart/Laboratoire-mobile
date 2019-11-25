@@ -1,8 +1,7 @@
 package unamur.buspanelapp.DAO;
 
-import com.google.gson.Gson;
-
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -13,16 +12,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import unamur.buspanelapp.Exception.GetAllPointsOfInterestException;
-import unamur.buspanelapp.Exception.GetAllStopsException;
 import unamur.buspanelapp.Model.PointOfInterestModel;
-import unamur.buspanelapp.Model.StopModel;
 import unamur.buspanelapp.Service.Converter;
-import unamur.buspanelapp.Service.MySSLSocketFactory;
 
 import static unamur.buspanelapp.Constants.URL_API_PointsOfInterest_BASE;
 
@@ -60,24 +53,32 @@ public class PointsOfInterestJSON implements PointsOfInterestDAO {
         return converter.formatToPointOfInterest(stringJSON);
     }
 
-    public ArrayList<PointOfInterestModel> getPointsOfInterestAroundAllStops(ArrayList<StopModel> stops) throws JSONException{
-        String stringJSON = "";
+    public String putSelectedPointOfInterest(String stopId, int piId){
+        String result = "";
         try {
-            StringBuilder request = new StringBuilder();
-            for(StopModel stop:stops){
-                request.append("coordX="+stop.getCoordX()+"&coordY="+stop.getCoordY()+"&");
-            }
-            request.deleteCharAt(request.length()-1);
-            URL url = new URL(URL_API_PointsOfInterest_BASE +"destination/getDestinationsAroundMult?"+request);
-            URLConnection connection = url.openConnection();
+            JSONObject ids = new JSONObject();
+            ids.put("idStop", stopId);
+            ids.put("idDestination", piId);
 
-            InputStream inputStream = new BufferedInputStream(connection.getInputStream());
-            stringJSON = converter.convertStreamToString(inputStream);
+            URL url = new URL(URL_API_PointsOfInterest_BASE +"destination/setSelectedDestination?idStop="+stopId+"&idDestination="+piId);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            //connection.setDoInput(true);
+            connection.setDoOutput(true);
+            /*connection.connect();
+            OutputStream out = connection.getOutputStream();
+            out.write(ids.toString().getBytes());*/
+
+            InputStream inputStream = connection.getInputStream();
+            result = converter.convertStreamToString(inputStream);
+
+            /*inputStream.close();
+            out.close();
+            connection.disconnect();*/
         }
-        catch (IOException e){
+        catch (IOException | JSONException e){
             System.out.print(e);
         }
-
-        return converter.formatToPointOfInterest(stringJSON);
+        return result;
     }
 }
