@@ -75,7 +75,6 @@ void loop(){
   }
 
   doc["id_destination"] = 4;
-  doc["luminosity"] = 0.0;
   doc["temperature"] = t;
   doc["humidity"] = h;
   Serial.println("\nSending connection to server...");

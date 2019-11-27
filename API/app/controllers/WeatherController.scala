@@ -153,7 +153,7 @@ class WeatherController @Inject()(db:Database, cc: ControllerComponents) extends
           }
         }
         finally {
-          conn.close
+          conn.close()
         }
         Created(Json.obj("status" -> "OK", "message" -> ("Weather created in interval " + interval._1 + " to " + interval._2)))
       }
