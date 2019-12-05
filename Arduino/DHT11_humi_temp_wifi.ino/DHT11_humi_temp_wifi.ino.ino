@@ -65,7 +65,7 @@ void loop(){
     t = dht.readTemperature();
   }
 
-  doc["id_destination"] = 4;
+  doc["id_destination"] = 52;
   doc["temperature"] = t;
   doc["humidity"] = h;
   Serial.println("\nSending connection to server...");
