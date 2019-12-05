@@ -16,20 +16,12 @@ double t = 0;  // TEMPERATURE VAR
 double h = 0;  // HUMIDITY VAR
 String data;
 
-///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = "DESKTOP";        // your network SSID (name)
 char pass[] = "abcdefghij";    // your network password (use for WPA, or use as key for WEP)
 int keyIndex = 0;            // your network key Index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
-// if you don't want to use DNS (and reduce your sketch size)
-// use the numeric IP instead of the name for the server:
-IPAddress server(192,168,137,1);  // numeric IP for Google (no DNS)
-//char server[] = "www.google.com";    // name address for Google (using DNS)
-
-// Initialize the Ethernet client library
-// with the IP address and port of the server
-// that you want to connect to (port 80 is default for HTTP):
+IPAddress server(192,168,137,1);  // numeric IP
 WiFiClient client;
 
 StaticJsonDocument<200> doc;
@@ -55,7 +47,6 @@ void setup() {
   while (status != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
-    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
 
     // wait 10 seconds for connection:
