@@ -4,5 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="grayTEC">#A59E9C</color>
+    <color name="lightGrayTEC">#c4c4c4</color>
     <color name="yellowTEC">#EFB722</color>
+    <color name="redTEC">#e3001a</color>
+    <color name="white">#FFFFFF</color>
 </resources>

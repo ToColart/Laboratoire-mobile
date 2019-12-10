@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
             android:id="@+id/busNumber"
@@ -13,10 +13,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="20sp"/>
+            android:textSize="@dimen/normalText"
+            android:gravity="center"/>
 
         <LinearLayout
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="6"
             android:layout_width="0dp">
@@ -27,37 +28,69 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:textSize="20sp"/>
+                android:textStyle="bold"
+                android:textSize="@dimen/normalText"/>
 
             <LinearLayout
+                android:id="@+id/stopsListOfPath"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/busStopsList"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:textSize="18sp"/>
+                    android:textSize="@dimen/stopsOfBus"
+                    android:ellipsize="end"/>
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/departureHour"
-            android:layout_weight="2"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="20sp"/>
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/departureHour"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/normalText"
+                    android:gravity="center"/>
 
-        <TextView
-            android:id="@+id/arrivalHour"
-            android:layout_weight="2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/arrivalHour"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/normalText"
+                    android:gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal|center_vertical">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/goToSplitScreenBtn"
+                    android:text="VOIR LES VISITES POSSIBLES"
+                    android:background="@color/redTEC"
+                    android:focusable="false"
+                    android:textColor="@color/white"
+                    android:onClick="goToSplitScreen"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"/>
+                </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

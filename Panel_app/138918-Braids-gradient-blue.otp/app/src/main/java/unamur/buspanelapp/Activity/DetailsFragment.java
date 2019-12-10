@@ -4,12 +4,16 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +36,7 @@ public class DetailsFragment extends Fragment {
     private BusModel bus;
     private GridLayout gridview;
     private TextView piDescription;
+    private TextView noPIsErrorMessage;
     private PointsOfInterestDAO pointsOfInterestDAO = new PointsOfInterestJSON();
     private ImageButton fullScreenFirstScreenBtn;
     private int seconds = 0;
@@ -39,11 +44,14 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if(gridview == null)
+            gridview = (GridLayout) inflater.inflate(R.layout.way_details_fragment, container, false);
+
         bus = (BusModel) getArguments().get("bus");
-        piDescription = (TextView) getActivity().findViewById(R.id.piDescription);
+        piDescription = getActivity().findViewById(R.id.piDescription);
         fullScreenFirstScreenBtn = getActivity().findViewById(R.id.fullScreenFirstScreenBtn);
 
-        gridview = (GridLayout) inflater.inflate(R.layout.way_details_fragment, container, false);
+        noPIsErrorMessage = gridview.findViewById(R.id.noPIsErrorMessage);
 
         new LoadPointsOfInterest().execute();
 
@@ -59,14 +67,15 @@ public class DetailsFragment extends Fragment {
             ArrayList<PointOfInterestModel> points = new ArrayList<>();
 
             try{
-                ArrayList<PointOfInterestModel> pointsToAdd;
+                /*ArrayList<PointOfInterestModel> pointsToAdd;
                 for(StopModel currentStop: bus.getStopsList()){
                     pointsToAdd = busesDAO.getPointsOfInterestAround(currentStop.getCoordX(), currentStop.getCoordY());
                     for(PointOfInterestModel pi : pointsToAdd){
                         if(!points.contains(pi))
                             points.add(pi);
                     }
-                }
+                }*/
+                points = busesDAO.getPointsOfInterestAroundAllStops(bus.getStopsList());
             }
             catch (JSONException e){
                 error = getString(R.string.JSONException);
@@ -79,27 +88,31 @@ public class DetailsFragment extends Fragment {
         protected void onPostExecute(ArrayList<PointOfInterestModel> points) {
             super.onPostExecute(points);
             if(error.equals("")) {
-                int i = 0;
-                for(PointOfInterestModel pi:points) {
-                    ImageView pic = new ImageView(gridview.getContext());
-                    Picasso
-                            .with(gridview.getContext())
-                            .load(pi.getPicture())
-                            //.resize(400, 230) //for phone
-                            .resize(180,120) //tablet
-                            .centerCrop()
-                            .noFade()
-                            .into(pic);
-                    setOnClick(pic, pi);
-                    //pic.setPadding(15,40,15,40); //phone
-                    pic.setPadding(15,20,15,20); //tablet
+                if(!points.isEmpty()) {
+                    gridview.removeAllViews();
+                    for (PointOfInterestModel pi : points) {
+                        ImageView pic = new ImageView(gridview.getContext());
+                        Picasso
+                                .with(gridview.getContext())
+                                .load(pi.getPicture())
+                                //.resize(400, 230) //for phone
+                                .resize(200, 130) //tablet
+                                .centerCrop()
+                                .noFade()
+                                .into(pic);
+                        setOnClick(pic, pi);
+                        //pic.setPadding(15,40,15,40); //phone
+                        pic.setPadding(7, 10, 7, 10); //tablet
 
-                    gridview.addView(pic);
+                        gridview.addView(pic);
+                    }
 
-                    i = (i==2)? 0 : i+1;
+                    timeout.start();
                 }
-
-                timeout.start();
+                else{
+                    noPIsErrorMessage.setVisibility(View.VISIBLE);
+                    piDescription.setText("");
+                }
             }
             else{
                 Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
@@ -111,19 +124,26 @@ public class DetailsFragment extends Fragment {
         pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gridview.setSelected(false);
                 for(int i = 0; i < gridview.getChildCount(); i++){
                     if(gridview.getChildAt(i).isSelected()) {
                         gridview.getChildAt(i).setSelected(false);
-                        gridview.getChildAt(i).setBackgroundColor(Color.parseColor("#FAFAFA"));
+                        gridview.getChildAt(i).setBackgroundResource(0);
                         break;
                     }
                 }
 
                 pic.setSelected(true);
-                piDescription.setText(String.format("%s\n%s", pi.getDescription(), getString(R.string.description_text_pi_selected)));
+
+                String piName = String.format("%s\n%s", pi.getName(), getString(R.string.description_text_pi_selected));
+
+                Spannable spannable = new SpannableString(piName);
+
+                spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.redTEC)), 0, pi.getName().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                piDescription.setText(spannable, TextView.BufferType.SPANNABLE);
                 seconds = 0;
-                pic.setBackgroundColor(Color.parseColor("#58ACFA"));
+                pic.setBackgroundResource(R.color.redTEC);
+
                 new PutSelectedPointOfInterest(CURRENT_STOP.getId(), pi.getId()).execute();
             }
         });
@@ -171,4 +191,22 @@ public class DetailsFragment extends Fragment {
             }
         }
     };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        timeout.interrupt();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        timeout.interrupt();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        timeout.interrupt();
+    }
 }

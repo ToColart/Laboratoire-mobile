@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:grid="http://schemas.android.com/apk/lib/android.support.v7.widget.GridLayout"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:padding="4dp"
-
-    grid:alignmentMode="alignBounds"
-    grid:columnCount="2"
-    grid:rowOrderPreserved="false"
-    grid:useDefaultMargins="true">-->
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
@@ -17,32 +6,13 @@
     android:layout_centerHorizontal="true"
 
     android:columnCount="3">
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/wayDetailsFragment">
 
-        </LinearLayout>-->
-        <!--<ListView
-            android:id="@+id/pointsOfInterestLine"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"/>-->
-        <!--<TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/seeMorePIsBtn"
-            android:clickable="true"
-            android:visibility="gone"/>-->
-        <!--<ScrollView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent" >
-                <TableLayout
-                    android:id="@+id/pointsOfInterestByCategories"
-                    android:layout_height="fill_parent"
-                    android:layout_width="fill_parent"
-                    android:stretchColumns="1"
-                    android:shrinkColumns="1"/>
-        </ScrollView>-->
+    <TextView
+        android:id="@+id/noPIsErrorMessage"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:text="@string/noPIsErrorMessage"
+        android:gravity="center"/>
+
 </GridLayout>

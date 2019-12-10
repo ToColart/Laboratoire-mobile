@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import unamur.buspanelapp.Exception.GetAllPointsOfInterestException;
 import unamur.buspanelapp.Model.PointOfInterestModel;
+import unamur.buspanelapp.Model.StopModel;
 import unamur.buspanelapp.Service.Converter;
 
 import static unamur.buspanelapp.Constants.URL_API_PointsOfInterest_BASE;
@@ -41,6 +42,27 @@ public class PointsOfInterestJSON implements PointsOfInterestDAO {
         String stringJSON = "";
         try {
             URL url = new URL(URL_API_PointsOfInterest_BASE +"destination/getDestinationsAround?coordX="+coordX+"&coordY="+coordY);
+            URLConnection connection = url.openConnection();
+
+            InputStream inputStream = new BufferedInputStream(connection.getInputStream());
+            stringJSON = converter.convertStreamToString(inputStream);
+        }
+        catch (IOException e){
+            System.out.print(e);
+        }
+
+        return converter.formatToPointOfInterest(stringJSON);
+    }
+
+    public ArrayList<PointOfInterestModel> getPointsOfInterestAroundAllStops(ArrayList<StopModel> stops) throws JSONException{
+        String stringJSON = "";
+        try {
+            StringBuilder request = new StringBuilder();
+            for(StopModel stop:stops){
+                request.append("coordX="+stop.getCoordX()+"&coordY="+stop.getCoordY()+"&");
+            }
+            request.deleteCharAt(request.length()-1);
+            URL url = new URL(URL_API_PointsOfInterest_BASE +"destination/getDestinationsAroundMult?"+request);
             URLConnection connection = url.openConnection();
 
             InputStream inputStream = new BufferedInputStream(connection.getInputStream());

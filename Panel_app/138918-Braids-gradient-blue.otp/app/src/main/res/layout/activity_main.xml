@@ -9,7 +9,8 @@
     <RelativeLayout
         android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/yellowTEC">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -21,49 +22,72 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="70dp"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/busNumberLabel"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:textAlignment="center"
                         android:text="@string/busNumberLabel"
                         android:textSize="@dimen/columnTitle"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/redTEC"
+                        android:gravity="center"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/grayTEC" />
 
                     <TextView
                         android:id="@+id/busDestinationLabel"
                         android:layout_weight="6"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
                         android:text="@string/busDestinationLabel"
                         android:textSize="@dimen/columnTitle"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/redTEC"
+                        android:gravity="center_vertical"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/grayTEC" />
 
                     <TextView
                         android:id="@+id/departureHourLabel"
                         android:layout_weight="2"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:textAlignment="center"
                         android:text="@string/departureHourLabel"
                         android:textSize="@dimen/columnTitle"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/redTEC"
+                        android:gravity="center"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/grayTEC" />
 
                     <TextView
                         android:id="@+id/arrivalHourLabel"
                         android:layout_weight="2"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:textAlignment="center"
                         android:text="@string/arrivalHourLabel"
                         android:textSize="@dimen/columnTitle"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/redTEC"
+                        android:gravity="center"/>
 
                 </LinearLayout>
                 <ListView
@@ -71,8 +95,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="50dp"
-                    android:background="@color/grayTEC"/>
+                    android:background="@color/lightGrayTEC"
+                    android:divider="@color/grayTEC"
+                    android:dividerHeight="6dp"/>
             </LinearLayout>
         </LinearLayout>
         <ImageButton
@@ -93,7 +118,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:background="@color/grayTEC">
         <ScrollView
             android:id="@+id/scrollViewFrame"
             android:layout_width="match_parent"
@@ -109,9 +135,13 @@
             android:id="@+id/piDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/normalText"
             android:layout_alignParentBottom="true"
+            android:textStyle="bold"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            android:paddingBottom="10dp"
+            android:text="@string/description_text_default"
+            android:background="@drawable/scan_tips_selector"/>
     </RelativeLayout>
     <!--<LinearLayout
         android:id="@+id/wayDetails"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="columnTitle">20sp</dimen>
-    <dimen name="normalText">20sp</dimen>
+    <dimen name="columnTitle">32sp</dimen>
+    <dimen name="normalText">28sp</dimen>
+    <dimen name="stopsOfBus">24sp</dimen>
 </resources>
